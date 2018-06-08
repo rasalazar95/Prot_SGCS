@@ -2,4 +2,4 @@
 SGCS 2018 
 Prototipo catálogo de sismos SGC y UA
 
-testing
+Astrid haz las pruebas acá
