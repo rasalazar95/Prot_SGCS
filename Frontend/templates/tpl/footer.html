@@ -1,0 +1,47 @@
+{% load staticfiles %}
+<div class="container-fluid" ng-controller="FooterController" style="background:dimgrey">
+    <div class="col-md-12 row" style="padding-top:5%;">
+            <div class="col-md-4">
+                <br>
+            </div>
+            <div class="col-md-4">
+                <br>
+            </div>
+            <div class="col-md-4" style="text-align: center;">
+                <button class="btn-footer" style="cursor:pointer;" ng-click="redirectSubscribe()">Inscríbete a nuestro boletín</button>
+            </div>
+    </div>
+    <div class="col-md-12 row graficaComplementaria" style="clear:both;color:#fff;padding:2%;padding-left:4%;padding-right-4%;">
+            <hr>
+            <hr>
+            <hr>
+    </div>
+    <div class="col-md-12 row" style="color:white;padding:3%;">
+            <div class="col-md-4">
+                <strong>Dirección</strong><br><br>
+                ​​​Diagonal 53 N0. 34 - 53 Bogotá D.C. Colombia Lunes a viernes 8.00 a.m. a 5 p.m. para todas nuestras sedes<br><br>
+                <strong>Línea de atención al ciudadano y denuncias</strong><br><br>
+                (571) 01 - 8000 - 110842<br><br>
+            </div>
+            <div class="col-md-4">
+                <strong>Teléfono</strong><br><br>
+                ​​​Diagonal 53 N0. 34 - 53 Bogotá D.C. Colombia Lunes a viernes 8.00 a.m. a 5 p.m. para todas nuestras sedes<br><br>
+                <strong>Línea de atención 24 horas para emergencias radiológicas</strong><br><br>
+                ​317 366 2793<br><br>
+            </div>
+            <div class="col-md-4" style="text-align: center;">
+                <img src="{% static 'static/logo-b.png' %}">
+            </div>
+    </div>
+    <div class="col-md-12" style="color:white;padding:1%;text-align:center;background-color:#535353;margin-left:-2%;width:105%;max-width:105%">
+                <div style="font-weight: bold;text-align: center;">
+                <a style="font-size:12px">Todos los derechos reservados 2018 - Código postal 111321</a>
+                <br><br>
+                <a  class="footer-tag" ng-click="redirectTerms()" >Políticas de privacidad y términos de uso</a> |
+                <a class="footer-tag"  ng-click="redirectOurHQ()">Nuestras sedes</a> |
+                <a href="mailto:cliente@sgc.gov.co" class="footer-tag" >Contáctenos: cliente@sgc.gov.co</a> |
+                <a class="footer-tag"  ng-click="redirectNotifications()">Notificaciones judiciales</a>
+                <br><br>
+                <a  class="footer-tag"  ng-click="redirectLogin()">Iniciar sesión</a></div>
+    </div>
+</div>

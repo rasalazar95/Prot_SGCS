@@ -1,0 +1,54 @@
+{
+  "_from": "angular@1.4.2",
+  "_id": "angular@1.4.2",
+  "_inBundle": false,
+  "_integrity": "sha1-AYw7pYUBC8oMZBf+zDMvvXwCMRs=",
+  "_location": "/angular",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "angular@1.4.2",
+    "name": "angular",
+    "escapedName": "angular",
+    "rawSpec": "1.4.2",
+    "saveSpec": null,
+    "fetchSpec": "1.4.2"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/angular/-/angular-1.4.2.tgz",
+  "_shasum": "018c3ba585010bca0c6417fecc332fbd7c02311b",
+  "_spec": "angular@1.4.2",
+  "_where": "C:\\Users\\Richard\\PycharmProjects\\Prot_SGCS\\Frontend",
+  "author": {
+    "name": "Angular Core Team",
+    "email": "angular-core+npm@google.com"
+  },
+  "bugs": {
+    "url": "https://github.com/angular/angular.js/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "HTML enhanced for web apps",
+  "homepage": "http://angularjs.org",
+  "keywords": [
+    "angular",
+    "framework",
+    "browser",
+    "client-side"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "angular",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angular/angular.js.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.4.2"
+}

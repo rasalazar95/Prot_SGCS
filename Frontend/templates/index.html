@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" >
+<div ng-app="catalogueApp" >
+<div ng-controller="appController" style="padding:0px;">
+{% load staticfiles %}
+    <title data-ng-bind="'Catálogo de sismos'"></title>
+    <link rel="icon" href="assets/tetro.ico" />
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+    <link href="{% static 'packages/fontawesome5.1.0/css/fontawesome.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'packages/elusive-icons-2.0.0/css/elusive-icons.css' %}" rel="stylesheet" type="text/css" />
+
+
+    <link href="{% static 'packages/bootstrap/dist/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/Extra-Styles.css' %}" rel="stylesheet" type="text/css" />
+
+    <!-- BEGIN CORE JQUERY PLUGINS -->
+    <!--[if lt is IE 9]>
+    <script src="assets/global/plugins/respond.min.js"></script>
+    <script src="assets/global/plugins/excanvas.min.js"></script>
+    <![endif]-->
+    <script src="{% static 'packages/jquery/dist/jquery.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'packages/bootstrap/dist/js/bootstrap.js' %}"  type="text/javascript" /> </script>
+    <!-- END CORE JQUERY PLUGINS -->
+    <!-- BEGIN CORE ANGULARJS PLUGINS -->
+    <script src="{% static 'packages/angular/angular.js' %}" type="text/javascript"></script>
+
+    <!-- google maps -->
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBweDD_lz9uuu9XvGJOrnVLNCVwHOJekiQ&libraries=places"
+        type="text/javascript"></script>
+    <script src="{% static 'packages/angular-google-maps/angular-google-maps.js' %}"  type="text/javascript" /> </script>
+
+    <script src="{% static 'packages/scripts/csv.js/csv.js' %}" type="text/javascript"></script>
+    <script src="{% static 'packages/angular-ui-grid/ui-grid.js' %}"></script>
+
+    <!-- BEGIN APP LEVEL ANGULARJS SCRIPTS -->
+    <script src="{% static 'js/appGlobal.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/tpl/FooterController.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/tpl/HeaderController.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/BodyController.js' %}" type="text/javascript"></script>
+    <!-- END APP LEVEL ANGULARJS SCRIPTS -->
+
+</div>
+<!-- END HEAD -->
+    <!-- BEGIN HEADER -->
+    {% include "tpl/header.html" %}
+    <!-- END HEADER -->
+    {% include "body.html" %}
+    <!-- BEGIN FOOTER -->
+    {% include "tpl/footer.html" %}
+    <!-- END FOOTER -->
+    <!-- END JAVASCRIPTS -->
+
+</div>
+</div>
+</html>
