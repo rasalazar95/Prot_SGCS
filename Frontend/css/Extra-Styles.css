@@ -1066,6 +1066,15 @@ input[type=range][orient=vertical]
     overflow: hidden;
     float: left;
 }
+
+.transition-hide-right{
+    transition: 0.5s;
+    width: 0px;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+    float: right;
+}
 .transition-hide > div > button{
     color:transparent;
 }
@@ -1122,7 +1131,6 @@ graficaComplementaria {
 
 .tab{
     border-radius: 4px;
-    color: #646464;
     padding: 8px 12px !important;
     text-align: center;
     margin: 0;
@@ -1136,8 +1144,13 @@ graficaComplementaria {
     border-bottom: 3px solid #f6342a;
 }
 
+.tab:focus{
+    outline:0px;
+}
+
 .tab-active{
     border-bottom: 3px solid #f6342a ;
+    outline:0px;
 }
 
 .footer-tag{
@@ -1167,4 +1180,226 @@ graficaComplementaria {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.resourcesbox{
+    border-radius: 7px 7px 7px 7px;
+    background-color:ghostwhite;
+}
+
+.resourcebox{
+    border-radius: 0px 7px 7px 0px;
+    font-weight: bold;
+    background-color:#82A43C;
+    color:white;
+    border:1px solid lightgrey;
+    cursor:pointer;
+    transition-delay: 0.5s;
+    transition: 0.5s;
+}
+.resourceboxfocus{
+    border-radius: 7px 7px 0px 0px;
+    margin-top:5px;
+}
+
+.resourceboxclosed{
+
+}
+
+.limitedh32{
+    max-height: 32px;
+}
+
+.limitedh500{
+    max-height: 500px;
+}
+
+.resourceboxopened{
+    border-radius: 0px 0px 7px 7px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom:5px;
+}
+
+
+ /* Customize the label (the container) */
+.ctn {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 12px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.ctn input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.ctn:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.ctn input:checked ~ .checkmark {
+  background-color: #C4D92F;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.ctn input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.ctn .checkmark:after {
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.btn-sgcbgl{
+    border-radius: 0 3px 3px 0;
+    color: black;
+    text-align: left;
+    margin: 0;
+    background: #82A43C;
+    border: 1px;
+    width:15px;
+}
+
+.btn-sgcbgr{
+    border-radius: 3px 0px 0px 3px;
+    color: black;
+    text-align: right;
+    margin: 0;
+    background: #82A43C;
+    border: 1px;
+    width:15px;
+}
+
+.btn-show{
+    border-radius: 15px;
+    color: black;
+    padding: 8px 12px !important;
+    text-align: center;
+    margin: 0;
+    background: #82A43C;
+    border: 1px;
+}
+
+.cattable{
+}
+
+.catitem{
+    border:1px solid dimgrey;
+}
+
+.cattitle{
+    background-color:lightgrey;
+    border: 1px solid dimgrey;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+/*
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #e2604f;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #e2604f;
+    cursor: pointer;
+}
+
+.input-range {
+-webkit-appearance: none;
+height: 200px;
+border-radius: 5px;
+background: #ccc;
+outline: none;
+writing-mode: bt-lr;
+-webkit-appearance: slider-vertical;
+}
+
+.input-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #e2604f;
+    cursor: pointer;
+}
+
+.input-range::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #e2604f;
+    cursor: pointer;
+}
+
+// Firefox Overrides
+::-moz-range-track {
+    background: #ccc;
+    border: 0;
+}
+
+input::-moz-focus-inner {
+  border: 0;
+}
+*/
+
+.custom-button{
+     top:50%;
+     transform:translateY(-50%);
 }

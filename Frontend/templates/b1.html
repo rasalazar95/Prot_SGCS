@@ -1,29 +1,217 @@
 {% load staticfiles %}
-<div ng-controller="B1Controller" class="container-fluid" style="padding-bottom: 10%;padding-top:2%;">
-        <div class="row col-md-12" style="margin-top:5%;">
-                <div class="col-md-3 row">
-                        <div class="col-md-12">
-                                <a class="index-tag control-label" style="color:#667f00;">Ingrese la búsqueda que desea hacer asd</a>
-                        </div>
-                        <div class="col-md-12">
-                                <input id="value1" ng-model="value1" class="input-lg form-control"  >
-                        </div>
+<div ng-controller="MapTabController" class="container-fluid" style="padding-bottom: 10%;padding-top:2%;">
+{% verbatim %}
+<div class="nopm" style="position:fixed;z-index:5;left:0px;top:23%;">
+    <button ng--click="hideLeftBar()" class="btn btn-sgcbgl unselectable" title="Esconder fuentes de información" ng-show="leftHiding == false">
+                <a style="margin-left:-7px;"> <  </a>
+    </button>
+    <button ng--click="showLeftBar()" class="btn btn-sgcbgl unselectable" title="Mostrar fuentes de información"  ng-show="leftHiding == true">
+              <a style="margin-left:-7px;"> >  </a>
+    </button>
+</div>
+
+<div class="nomp" style="position:fixed;right:0px;top:23%" >
+    <button ng--click="hideRightBar()" class="btn btn-sgcbgr unselectable" title="Esconder formatos de salida"  ng-show="rightHiding == false">
+        <a style="margin-right:-7px;"> >  </a>
+    </button>
+    <button ng--click="showRightBar()" class="btn btn-sgcbgr unselectable" title="Mostrar formatos de salida"  ng-show="rightHiding == true">
+                <a style="margin-right:-7px;"> <  </a>
+    </button>
+</div>
+
+<div class="nomp" style="position:fixed;left:0px;top:15%;z-index:5;"><!-- openConfig('') -->
+    <button ng-click="openConfig('')" style="width:100%;"
+            class="btn" ><a class="el el-wrench"></a>
+    </button>
+</div>
+
+<div class="col-md-12 nomp row" >
+
+    <div ng-if="leftHiding == false" class="col-md-2 nomp resourcesbox" ng-class="{'transition-hide':leftHiding == true}"  style="z-index:1;">
+            <!--<div class="col-md-12" style="text-align:center;font-weight: bold;margin-bottom:-1%;">
+                Fuentes y unidades de información
+            </div>-->
+
+            <div class="col-md-12 row nomp" ng-repeat="area in areas">
+                <div class="col-md-12 nomp resourcebox row unselectable" ng-click="changeActive(area)"
+                     ng-class="{'resourceboxfocus': area.activo}">
+                    <div class="col-md-1 nomp" style="padding-left:15px;">
+                        <img ng-if="area.activo == true" src="Frontend/static/arrowdown.png" width="10px" height="10px;">
+                        <img ng-if="area.activo == false" src="Frontend/static/arrow-right-b.png" width="15px" height="15px;">
+                    </div>
+                    <div class="col-md-11">
+                        <a style="padding-left:15px;">{{ area.nombre }} </a>
+                    </div>
                 </div>
-                <div class="col-md-3 row">
+                <div class="col-md-12 row nomp resourceboxopened" ng-if="area.activo">
+                    <div class="col-md-12 row"  ng-repeat="recurso in area.recursos">
                         <div class="col-md-12">
-                                <a class="index-tag control-label" style="color:#667f00;">Ingrese la búsqueda que desea hacer fgh-</a>
+                            <label class="ctn"> {{recurso.nombre}}
+                            <img ng-src="{{recurso.icono}}" width="15px" style="margin-left:2%;">
+                              <input type="checkbox" ng-model="recurso.activo" ng-change="redraw()">
+                              <span class="checkmark"></span>
+                            </label>
                         </div>
-                        <div class="col-md-12">
-                                <input id="value2" ng-model="value2" class="input-lg form-control"  >
-                        </div>
+                    </div>
                 </div>
-                <div class="col-md-3 row" >
-                        <div class="col-md-12">
-                                <a class="index-tag" style="color:#667f00;">Ingrese la búsqueda que desea hacer jkl</a>
-                        </div>
-                        <div class="col-md-12">
-                                <input id="value3" ng-model="value3" class="input-lg form-control"  >
-                        </div>
-                </div>
+            </div>
         </div>
+    <div class="nomp row"
+         ng-class="{'col-md-7' : leftHiding == false && rightHiding == false,
+         'col-md-9':leftHiding == true || rightHiding == true,
+         'col-md-12':leftHiding == true && rightHiding == true}"
+            style="z-index: 1;">
+            <div class='' id="map_far" style="height:135px;width:70px;position:absolute;right:8.33%;z-index:10000;">
+            </div>
+        <input id="pac-input" class="form-control input-xxlarge" type="text" placeholder="Search Box">
+        <div class='col-md-11' id="map"></div>
+        <div class="col-md-1 row" >
+            <a style="font-size:12px;white-space: nowrap">
+                {{config.distanceslider.value}}  {{config.distanceslider.denominacion}}</a>
+                <div class="range-slider col-md-6">
+                    <input class="input-range" orient="vertical" type="range"
+                     min="{{config.distanceslider.min}}"  max="{{config.distanceslider.max}}"
+                     ng-style="{height: config.distanceslider.height, width: config.distanceslider.width}"
+                     ng-model="config.distanceslider.value" ng-change="distanceChanged()" >
+                    <span class="range-value"></span>
+                </div>
+            <div class="col-md-6 nomp row" ng-if="false">
+                <div class="col-md-12" style="font-size:12px;">
+                    {{config.distanceslider.max}} {{config.distanceslider.denominacion}}
+                </div>
+                <div class="col-md-12">
+                    {{config.distanceslider.max / 2}} {{config.distanceslider.denominacion}}
+                </div>
+                <div class="col-md-12">
+                    {{config.distanceslider.min}} {{config.distanceslider.denominacion}}
+                </div>
+            </div>
+            <!--<div class="slidecontainer" >
+                <input type="range" min="{{distancelider.min}}" orient="vertical" max="{{distancelider.max}}" class="vVertical"
+                       ng-style="{height: distanceslider.height, width: distanceslider.width}"
+                       ng-model="distancelider.value" class="range-slider">
+            </div>-->
+        </div>
+
+        <div class="col-md-11" style="" >
+            <div class="slidecontainer">
+                <input type="range" min="{{config.timeslider.min}}" max="{{config.timeslider.max}}"
+                       ng-model="config.timeslider.value" class="slider" ng-change="timeChanged()">
+            </div>
+        </div>
+        <a style="font-size:12px;">{{config.timeslider.value}} {{config.timeslider.denominacion}}</a>
+        <div class="col-md-12 row" style="margin-top:0%" >
+            <div class="col-md-2">
+               {{config.timeslider.min}} {{config.timeslider.denominacion}}
+            </div>
+            <div class="col-md-2" style="padding-left:4%;">
+               {{(config.timeslider.max / 5) * 1}} {{config.timeslider.denominacion}}
+            </div>
+            <div class="col-md-2"  style="padding-left:5%;">
+               {{(config.timeslider.max / 5) * 2}} {{config.timeslider.denominacion}}
+            </div>
+            <div class="col-md-2"  style="padding-left:6%;">
+               {{(config.timeslider.max / 5) * 3}} {{config.timeslider.denominacion}}
+            </div>
+            <div class="col-md-2"  style="padding-left:6%;">
+               {{(config.timeslider.max / 5) * 4}} {{config.timeslider.denominacion}}
+            </div>
+            <div class="col-md-2"  style="text-align:right;padding-right:2%;">
+               {{config.timeslider.max }} {{config.timeslider.denominacion}}
+            </div>
+        </div>
+    </div>
+
+    <div  ng-if="rightHiding == false" ng-class="{'transition-hide-right':rightHiding == true}"  class="col-md-3 row nomp" >
+
+        <div class="col-md-12 row cattable" style="margin-left:0px;margin-top:1%;">
+            <div class="col-md-12 nomp" ng-repeat="item in catalogue">
+
+                <div class="col-md-12 row nomp resourcebox unselectable" ng-click="changeActive(item)" style="max-height:5%;">
+                    <div class="col-md-1 nomp" style="text-align:center;">
+                        <img ng-if="item.activo == true" src="Frontend/static/arrowdown.png" width="10px" height="10px;">
+                        <img ng-if="item.activo == false" src="Frontend/static/arrow-right-b.png" width="15px" height="15px;">
+                    </div>
+                    <div class="col-md-11" style="font-weight: bold;">
+                        <label>{{item.nombre}}</label>
+                    </div>
+                </div>
+                <div class="col-md-12 nomp row" ng-show="item.activo == true"
+                     style="height:200px;max-height:200px;overflow-y: auto;margin-bottom:3%;    ">
+                    <div ng-if="item.tipo == 'info'">
+                        <div ng-if="item.valores.length > 0" class="col-md-12 nomp" style=""
+                             ng-repeat="val in item.valores">
+                            <div class="col-md-12">
+                                <label >{{val.nombre}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 row" style="font-size:12px;">
+                            <label>Número de estaciones: {{item.valores.num_estaciones}}</label>
+                        </div>
+                        <div class="col-md-12 row"  style="font-size:12px;">
+                            <label>Número de sismos: {{item.valores.num_sismos}}</label>
+                        </div>
+                        <div class="col-md-12 row"  style="font-size:12px;">
+                            <label>Número de mecanismos focales: {{item.valores.num_mecanismos}}</label>
+                        </div>
+                        <div class="col-md-12 row"  style="font-size:12px;">
+                            <label>Número de intensidades percibidas: {{item.valores.num_intper}} 88</label>
+                        </div>
+                        <div class="col-md-12 row"  style="font-size:12px;">
+                            <label>Tamaño de la descarga: {{item.valores.tamano_descarga / (1024*1024*1024)}} GB</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12 row">
+                        {{item.position}}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+ </div>
+    <div class="col-md-12 nomp">
+        <div class="col-md-12" style="text-align:center;font-weight: bold;margin-top:1%;padding-right:5%;">
+            Formatos de salida
+        </div>
+        <div class="col-md-12 row">
+            <div class="col-md-12 row" style="text-align:center;">
+                <div class="col-md-12" style="text-align:center;margin-top:1%;margin-bottom:1%;">
+                    Descargas
+                </div>
+                <div class="col-md-12 row">
+                    <div class="col-md-3" style="margin-bottom:2%;">
+                        <button ng-click="" style="width:100%;" class="btn">Descargar como XML</button>
+                    </div>
+                    <div class="col-md-3" >
+                        <button ng-click="" style="width:100%;"
+                                class="btn" >Descargar como PDF</button>
+                    </div>
+                    <div class="col-md-3">
+                        <button ng-click="" style="width:100%;"
+                                class="btn" >Descargar como PNG</button>
+                    </div>
+                    <div class="col-md-3">
+                        <button ng-click="" style="width:100%;"
+                                class="btn" >Descargar como ZIP</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 row" style="margin-top:1%;">
+                <div class="col-md-12" style="text-align:center;margin-bottom:1%;">
+                    Email
+                </div>
+                <div class="col-md-6" style="">
+                    <input class="input-xxlarge" style="width:100%;height:100%;"
+                           ng-model="emailOutput" placeholder="example@example.com">
+                </div>
+                <div class="col-md-6" >
+                    <button ng-click="enviarEmail()" style="width:100%;" class="btn " >Descargar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endverbatim %}
 </div>

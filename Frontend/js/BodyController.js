@@ -8,25 +8,722 @@ catalogueApp.controller('BodyController', ['$scope', function($scope) {
     }
 }]);
 
-catalogueApp.controller('B1Controller', ['$scope', function($scope) {
+catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGoogleMapApi', '$uibModal', '$document', function($scope, $log, GoogleMapApi, $uibModal, $document) {
 
-    $scope.value1 = 'hola';
-    $scope.value2 = "mundo";
-    $scope.value3 = "test";
+    var $ctrl = this;
     $scope.tab = 1;
-
+    $scope.loading = false;
+    $scope.leftHiding = false;
+    $scope.rightHiding = false;
 
     $scope.changeTab = function(value){
         $scope.tab = value;
     }
+
+    $scope.hideLeftBar = function(){
+        $scope.leftHiding = true;
+    }
+    $scope.showLeftBar = function(){
+        $scope.leftHiding = false;
+    }
+
+    $scope.hideRightBar = function(){
+        $scope.rightHiding = true;
+    }
+    $scope.showRightBar = function(){
+        $scope.rightHiding = false;
+    }
+    $scope.changeActive = function(obj){
+        obj.activo = !obj.activo;
+    }
+
+
+            //     {
+            //     nombre: "Reportes",
+            //     tipo:'doc',
+            //     activo: true,
+            //     valores : [
+            //         {
+            //           nombre: "sismo 1.docx",
+            //           ruta: "/static/sismo1.docx"
+            //         },
+            //         {
+            //           nombre: "sismo 1.docx",
+            //           ruta: "/Frontend/static/sismo1.docx"
+            //         },
+            //     ]
+            // },
+
+    $scope.catalogue = [
+        {
+            nombre: "Resumen de la búsqueda",
+            tipo: 'info',
+            activo:true,
+            valores : {
+                num_estaciones: 10,
+                num_sismos: 80,
+                num_mecanismos: 10,
+                tamano_descarga: 83000000000,
+            }
+        },
+    ]
+
+    $scope.areas = [];
+
+    $scope.config = {
+        catalogue : $scope.catalogue,
+
+    }
+
+    $scope.changeConfig = function(configObj, feature, value){
+        configObj.feature = value;
+
+    };
+
+    $scope.config.timeslider = {
+        min: 0,
+        value : 20,
+        max: 100,
+        height: '5px',
+        width: '100%',
+        denominacion: 'Años',
+    }
+
+    $scope.config.distanceslider = {
+        min: 0,
+        value : 10,
+        max: 30,
+        height: '800px',
+        width: '5px',
+        denominacion: 'km',
+    }
+
+    $scope.timeTypes = [
+        {
+            nombre: 'Años'
+        },
+        {
+            nombre: 'Meses'
+        },
+        {
+            nombre: 'Semanas'
+        },
+        {
+            nombre: 'Días'
+        },
+        {
+            nombre: 'Horas'
+        }
+    ];
+
+    $scope.distanceTypes = [
+        {
+            nombre: 'Kilometros'
+        },
+        {
+            nombre: 'Metros'
+        },
+    ];
+
+    var fuentes = {
+        nombre:'Fuentes y unidades de información',
+        'activo': 1,
+        'recursos':[
+            {
+                nombre:'Sismos',
+                activo: true,
+                tipo : 1,
+                icono: "/Frontend/static/seism.png",
+            },
+            {
+                nombre:'Estaciones',
+                activo: true,
+                tipo : 2,
+                icono: "/Frontend/static/station.png",
+            },
+            {
+                nombre:'Mecanismos focales',
+                activo: false,
+                tipo : 3,
+            },
+            {
+                nombre:'Intesidad instrumental',
+                activo: false,
+                tipo : 4,
+            },
+            {
+                nombre:'Intensidades percibidas',
+                activo: false,
+                tipo : 5,
+            },
+            {
+                nombre:'Modelo de velocidades',
+                activo: false,
+                tipo : 6,
+            },
+            {
+                nombre:'Estaciones GNSS',
+                activo: true,
+                tipo : 7,
+            },
+            {
+                nombre:'Movimientos en masa',
+                activo: false,
+                tipo : 8,
+            },
+            {
+                nombre:'Mapa de amenaza sísmica',
+                activo: false,
+                tipo : 9,
+            },
+            ],
+    }
+
+    var RSNC = {
+        nombre:'Red Sismológica',
+        'activo': 1,
+        'recursos':[
+            {
+                nombre:'Sismos',
+                activo: true,
+                tipo : 1,
+                icono: "/Frontend/static/seism.png",
+            },
+            {
+                nombre:'Estaciones',
+                activo: false,
+                tipo : 2,
+                icono: "/Frontend/static/station.png",
+            },
+            {
+                nombre:'Mecanismos focales',
+                activo: false,
+                tipo : 3,
+            },
+            {
+                nombre:'Intesidad instrumental',
+                activo: false,
+                tipo : 4,
+            },
+            {
+                nombre:'Intensidades percibidas',
+                activo: false,
+                tipo : 5,
+            },
+            ],
+    }
+
+    var OVSM = {
+        'nombre':"OVS Manizales",
+        'activo': 1,
+        'recursos':[
+            {
+                nombre:'Sismos',
+                activo: true,
+            },
+            {
+                nombre:'Estaciones',
+                activo: false,
+                tipo : 7
+            },
+            {
+                nombre:'Mecanismos focales',
+                activo: false,
+            },
+            ],
+    }
+
+    var OVSP = {
+        'nombre':'OVS Pasto',
+        'activo': 0,
+        'recursos':[
+            {
+                nombre:'Sismos',
+                activo: true,
+                tipo : 9,
+            },
+            {
+                nombre:'Estaciones',
+                activo: false,
+                tipo : 2,
+                tipo : 10,
+            },
+            {
+                nombre:'Mecanismos focales',
+                activo: true,
+                tipo : 11,
+            },
+            ],
+    }
+
+    var OVSPOP = {
+        'nombre': 'OVS Popayán',
+        'activo': 1,
+        'recursos':[
+            {
+                nombre:'Sismos',
+                activo: true,
+            },
+            {
+                nombre:'Mecanismos focales',
+                activo: false,
+            },
+            ],
+    }
+
+    var GRED = {
+        'nombre':"GeoRED",
+        'activo': 1,
+        'recursos':[
+            {
+                nombre:'Modelo de velocidades',
+                activo: false,
+            },
+            {
+                nombre:'Modelo de deformación',
+                activo: false,
+            },
+            {
+                nombre:'Estaciones GNSS',
+                activo: false,
+                icono: "/Frontend/static/gpsstation.png"
+            },
+            ],
+    }
+
+    var MMA = {
+        'nombre': 'Mov. en masa',
+        'activo': 1,
+        'recursos':[
+            {
+                nombre:'Movimientos en masa',
+                activo: false,
+            },
+            {
+                nombre:'Informes',
+                activo: false,
+            },
+            ],
+    };
+
+    var RNAC = {
+        'nombre': "Red de acelerografos",
+        'activo': 1,
+        'recursos':[
+            {
+                nombre:'Mapa aceleraciones',
+                activo: true,
+            },
+            ],
+    }
+
+    $scope.map = {
+      show: true,
+      control: {},
+      version: "unknown",
+      showTraffic: true,
+      showBicycling: false,
+      showWeather: false,
+      showHeat: false,
+        disableDefaultUI:true,
+      center: {
+        latitude: 1.2218581000000000001,
+        longitude: -77.3679451000000000001,
+          lat: 1.2218581000000000001,
+          lng: -77.3679451000000000001,
+      },
+      options: {
+        mapTypeId: google.maps.MapTypeId.HYBRID,
+          zoomControl:false,
+          mapTypeControl:false,
+        streetViewControl: false,
+        panControl: true,
+        maxZoom: 11,
+        minZoom: 11,
+          draggable:true,
+        fullscreenControl: true,
+      },
+      zoom: 11,
+      dragging: true,
+      options_far: {
+        mapTypeId: google.maps.MapTypeId.HYBRID,
+          zoomControl:false,
+          mapTypeControl:false,
+        streetViewControl: false,
+        panControl: false,
+        maxZoom: 3,
+        minZoom: 3,
+          draggable:false,
+        fullscreenControl: false,
+      },
+    }
+
+  GoogleMapApi.then(function(maps) {
+            maps.visualRefresh = true;
+            $scope.defaultBounds = new google.maps.LatLngBounds(
+          new google.maps.LatLng(40.82148, -73.66450),
+          new google.maps.LatLng(40.66541, -74.31715));
+
+
+        $scope.map.bounds = {
+          northeast: {
+            latitude:$scope.defaultBounds.getNorthEast().lat(),
+            longitude:$scope.defaultBounds.getNorthEast().lng()
+          },
+          southwest: {
+            latitude:$scope.defaultBounds.getSouthWest().lat(),
+            longitude:-$scope.defaultBounds.getSouthWest().lng()
+
+          }
+        }
+    });
+
+   /// push everything to the areas
+    $scope.areas.push(fuentes);
+   //  $scope.areas.push(RSNC);
+   //  $scope.areas.push(OVSM);
+   //  $scope.areas.push(OVSP);
+   //  $scope.areas.push(OVSPOP);
+   //  $scope.areas.push(GRED);
+   //  $scope.areas.push(RNAC);
+   //  $scope.areas.push(MMA);
+
+    $scope.generalMap = new google.maps.Map(document.getElementById('map'), {
+            zoom: $scope.map.zoom,
+            center: $scope.map.center,
+            options: $scope.map.options,
+      showTraffic: $scope.map.showTraffic,
+      showBicycling: $scope.map.showBicycling,
+      showWeather: $scope.map.showWeather,
+      showHeat: $scope.map.showHeat,
+      disableDefaultUI: $scope.map.disableDefaultUI,
+       zoomControl: true,
+        });
+    $scope.generalMap.mapTypeId = google.maps.MapTypeId.HYBRID;
+
+    $scope.mapFar = new google.maps.Map(document.getElementById('map_far'), {
+      zoom: 3,
+      showTraffic: $scope.map.showTraffic,
+      showBicycling: $scope.map.showBicycling,
+      showWeather: $scope.map.showWeather,
+      showHeat: $scope.map.showHeat,
+      disableDefaultUI: $scope.map.disableDefaultUI,
+      center: {lat: 4.07087, lng: -73.31733299999998},
+        options: $scope.map.options_far,
+    });
+    $scope.mapFar.mapTypeId = google.maps.MapTypeId.HYBRID;
+
+    var input = document.getElementById('pac-input');
+    var searchBox = new google.maps.places.SearchBox(input);
+    $scope.generalMap.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+    var autocomplete = new google.maps.places.Autocomplete(input);
+
+    // Set initial restrict to the greater list of countries.
+    autocomplete.setComponentRestrictions(
+        {'country': ['co']});
+
+
+        var markers = [];
+        // Listen for the event fired when the user selects a prediction and retrieve
+        // more details for that place.
+        searchBox.addListener('places_changed', function() {
+          var places = searchBox.getPlaces();
+
+          if (places.length == 0) {
+            return;
+          }
+
+
+          // For each place, get the icon, name and location.
+          var bounds = new google.maps.LatLngBounds();
+          places.forEach(function(place) {
+            if (!place.geometry) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+            var icon = {
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            };
+
+            // Create a marker for each place.
+            markers.push({
+                position: place.geometry.location,
+                image : icon,
+                timeStart: 10000,
+                timeEnd: 0,
+                marker: new google.maps.Marker({
+              map: $scope.generalMap,
+              icon: icon,
+              title: place.name,
+              position: place.geometry.location
+            })
+            });
+            lastValidCenter = place.geometry.location;
+           allowedBounds = new google.maps.LatLngBounds(
+                 new google.maps.LatLng( place.geometry.location.lat() - vby, place.geometry.location.lng() - vby),
+                 new google.maps.LatLng( place.geometry.location.lat() + vby, place.geometry.location.lng() + vby)
+            );
+            // draw circle
+             circleFar.setCenter(place.geometry.location);
+             circleGeneral.setCenter(place.geometry.location);
+              $scope.generalMap.setCenter(place.geometry.location);
+            $scope.redraw("search");
+              //
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          $scope.generalMap.fitBounds(bounds);
+        });
+
+    markers.push({
+        marker: new google.maps.Marker({
+            position: {
+                lat: 1.2218581000000000001, lng: -77.3679451000000000001
+            },
+            map: $scope.generalMap,
+            icon: "/Frontend/static/volcano.png"
+        }),
+        type:-1,
+        name: "center",
+    });
+
+    var circleGeneral = new google.maps.Circle({
+                map: $scope.generalMap,
+                radius: 1000 * $scope.config.distanceslider.value,
+                center: {lat: 1.2218581000000000001, lng: -77.3679451000000000001},
+                fillColor: '#AA0000',
+                fillOpacity: 0.1,
+                strokeColor: '#AA0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                draggable: false,    // Dragable
+                editable: false      // Resizable
+    });
+    var circleFar = new google.maps.Circle({
+                map: $scope.mapFar,
+                radius: 1000 * $scope.config.distanceslider.value ,
+                center: {lat: 1.2218581000000000001, lng: -77.3679451000000000001},
+                fillColor: '#AA0000',
+                fillOpacity: 0.1,
+                strokeColor: '#AA0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                draggable: false,    // Dragable
+                editable: false      // Resizable
+    });
+
+    ///// listen to click events
+    $scope.mapFar.addListener('click', function(event) {
+             lastValidCenter = new google.maps.LatLng( event.latLng.lat() , event.latLng.lng());
+             circleFar.setCenter({lat: event.latLng.lat(), lng: event.latLng.lng()})
+             circleGeneral.setCenter({lat: event.latLng.lat(), lng: event.latLng.lng()})
+             $scope.generalMap.setCenter({lat: event.latLng.lat(), lng: event.latLng.lng()}),
+                 allowedBounds = new google.maps.LatLngBounds(
+                     new google.maps.LatLng( event.latLng.lat() - vby, event.latLng.lng() - vby),
+                     new google.maps.LatLng( event.latLng.lat() + vby, event.latLng.lng() + vby)
+                );
+             $scope.redraw('moved');
+    });
+
+    //////////////
+    $scope.timeChanged = function(){
+        $scope.redraw('time');
+    }
+
+    $scope.distanceChanged = function(){
+        circleGeneral.setRadius($scope.config.distanceslider.value * 1000) ;
+        circleFar.setRadius($scope.config.distanceslider.value * 1000) ;
+        $scope.redraw('distance');
+    }
+
+    $scope.getMarkerName = function(){
+        return "test";
+    };
+
+    $scope.getMarkerType = function(){
+        var value = Math.floor(chance.floating({min:1,max:3.9}));
+        return value;
+    }
+
+    $scope.getMarkerImage = function(type){
+        if(type < 1 || type == null)
+            return null;
+        if(type == 1)
+            return "/Frontend/static/seism.png";
+        if(type == 2)
+            return "/Frontend/static/station.png";
+        if(type == 3)
+            return "/Frontend/static/gpsstation.png";
+        if(type == 4)
+            return "/Frontend/static/seism.png";
+        if(type == 6)
+            return "/Frontend/static/seism.png";
+        if(type == 7)
+            return "/Frontend/static/seism.png";
+        if(type == 8)
+            return "/Frontend/static/seism.png";
+        if(type == 9)
+            return "/Frontend/static/seism.png";
+        if(type == 10)
+            return "/Frontend/static/seism.png";
+    }
+
+    function arePointsNear(checkPoint, centerPoint, km) {
+       var ky = 40000 / 360;
+       var kx = Math.cos(Math.PI * centerPoint.lat / 180.0) * ky;
+       var dx = Math.abs(centerPoint.lng - checkPoint.lng) * kx;
+       var dy = Math.abs(centerPoint.lat - checkPoint.lat) * ky;
+       return Math.sqrt(dx * dx + dy * dy) <= km;
+    }
+
+    // lat: 1.2218581, lng: -77.3679451
+    $scope.getRandomPos = function(){
+        var pos = {
+            lat: chance.floating({min:1.000000000001,max:1.535865000000000001}),//getRndInteger(1.15156,1.221865),
+            lng: chance.floating({min:-77.8679440000000000001,max:-77.1359470000000000001}),//getRndInteger(-77.4679440,-77.3579470)
+        };
+        return pos;
+    };
+
+    $scope.redraw = function(condition){
+        var aux;
+        for(i = 1; i < markers.length;i++){
+
+            if(markers[i].timeEnd > markers[i].timeStart ){
+                aux = markers[i].timeEnd;
+                markers[i].timeEnd  = markers[i].timeStart;
+                markers[i].timeStart = aux;
+            }
+            if(markers[i].timeEnd < 20 || markers[i].type == 1)
+                markers[i].timeEnd = 0;
+
+            if(markers[i].timeEnd <= $scope.config.timeslider.value &&  $scope.config.timeslider.value <= markers[i].timeStart){
+                if(markers[i].type == 1 && $scope.areas[0].recursos[0].activo == true)
+                {
+                    markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position))
+                }else{
+                    if(markers[i].type == 2 && $scope.areas[0].recursos[1].activo == true)
+                    {
+                        markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position))
+                    }else{
+                        if(markers[i].type == 3 && $scope.areas[0].recursos[6].activo == true){
+                            markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position))
+                        }else{
+                        markers[i].marker.setVisible(false);
+
+                        }
+                    }
+                }
+            }else{
+                markers[i].marker.setVisible(false);
+            }
+        }
+    }
+
+    $scope.getMarkerVisibility = function(position){
+        return arePointsNear(position,
+            {lat: circleGeneral.getCenter().lat(), lng: circleGeneral.getCenter().lng()},
+            $scope.config.distanceslider.value
+            )
+    }
+
+    function setTime(){
+        var value = Math.floor(chance.floating({min:0,max:100.9}));
+        return value;
+    }
+
+    var auxMarker = {};
+    var randomMarkers = function(number){
+        for(i = 0; i < number; i++) {
+        auxMarker.type = $scope.getMarkerType();
+        auxMarker.name = $scope.getMarkerName();
+        auxMarker.image = $scope.getMarkerImage(auxMarker.type);
+        auxMarker.position = $scope.getRandomPos();
+        auxMarker.timeStart = setTime();
+        auxMarker.timeEnd = setTime();
+        auxMarker.marker = new google.maps.Marker({
+                  map: $scope.generalMap,
+                  icon: $scope.getMarkerImage(auxMarker.type),
+                  title: $scope.getMarkerName(),
+                  position: auxMarker.position,
+                  visible : false,
+                });
+        auxMarker.marker.addListener('click', function() {
+            $scope.selectedMarker = this;
+        });
+
+        markers.push(auxMarker);
+        auxMarker = {};
+        }
+        $scope.redraw("start");
+    }
+
+// IMPORTANTE PARA TEST
+    randomMarkers(1000);
+
+
+
+    var vby = 0.3;
+    // bounds of the desired area
+    var allowedBounds = new google.maps.LatLngBounds(
+     new google.maps.LatLng($scope.generalMap.center.lat() - vby, $scope.generalMap.center.lng() - vby),
+     new google.maps.LatLng($scope.generalMap.center.lat() + vby, $scope.generalMap.center.lng() + vby)
+    );
+    var lastValidCenter = $scope.generalMap.getCenter();
+
+    google.maps.event.addListener( $scope.generalMap, 'center_changed', function() {
+        if (allowedBounds.contains( $scope.generalMap.getCenter())) {
+            // still within valid bounds, so save the last valid position
+            lastValidCenter =  $scope.generalMap.getCenter();
+            return;
+        }
+
+        // not valid anymore => return to last valid position
+         $scope.generalMap.panTo(lastValidCenter);
+    });
+
+
+    $scope.openConfig = function(size){
+      var modalInstance = $uibModal.open({
+        animation: false,
+        templateUrl: '/Frontend/templates/configModal.html',
+        controller: 'configController',
+        backdrop: true,
+        scope: $scope,
+        size: size,
+        resolve: {
+            config : function () {
+                return $scope.config;
+            },
+        },
+        }
+        );
+        modalInstance.result.then(function (result) {
+                $scope.config = result;
+        });
+    }
+
 }]);
 
-catalogueApp.controller('B2Controller', ['$scope', function($scope) {
+catalogueApp.controller('configController', ['$uibModalInstance','$scope', 'config', function($uibModalInstance,$scope, config) {
 
-    $scope.tab = 1;
-    $scope.changeTab = function(value){
-        $scope.tab = value;
-    }
+    $scope.config = config;
+
+     $scope.ok = function() {
+        $scope.$close($scope.config)
+    };
+
+     $scope.cancel = function() {
+         $scope.$dismiss("cancel");
+    };
 }]);
 
 catalogueApp.controller('B3Controller', ['$scope', function($scope) {

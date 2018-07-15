@@ -1,0 +1,25 @@
+<div class="modal-body container-fluid col-md-12 row" style="padding-bottom: 10%;padding-top:2%;z-index:20000;" role="dialog">
+        <div class="row col-md-12" style="margin-top:5%;">
+                <div class="col-md-4">
+                        Configuración de la búsqueda:
+                </div>
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-4" >
+                </div>
+        </div>
+
+        ok: {{ok}}
+        <!--<pre ng-repeat="(key, val) in this">{{key}} = {{val|json}}</pre>-->
+
+        <div class="row col-md-12" style="margin-top:5%;">
+                <div class="col-md-6">
+                        <button  style="width:100%;"
+                                class="btn" ng-click="ok()" >Ok</button>
+                </div>
+                <div class="col-md-6">
+                        <button  style="width:100%;"
+                                class="btn btn-danger" ng-click="$dismiss()" >Cancel</button>
+                </div>
+        </div>
+</div>
