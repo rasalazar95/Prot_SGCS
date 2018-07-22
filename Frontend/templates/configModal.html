@@ -1,21 +1,96 @@
-<div class="modal-body container-fluid col-md-12 row" style="padding-bottom: 10%;padding-top:2%;z-index:20000;" role="dialog">
-        <div class="row col-md-12" style="margin-top:5%;">
-                <div class="col-md-4">
-                        Configuración de la búsqueda:
-                </div>
-                <div class="col-md-4">
-                </div>
-                <div class="col-md-4" >
+<div class="modal-body container-fluid col-md-12 row" style="padding-bottom: 10%;padding-top:2%;z-index:20000;width:120%:" role="dialog">
+        <div class="col-md-12" style="margin-bottom:2%;">
+                <div class="col-md-12" style="font-weight: bold;text-align: center;font-size:20px;">
+                    <a style="border-bottom:1px solid lightgrey">Configuración de los controles de la zona de trabajo</a>
                 </div>
         </div>
+    <div class="col-md-12">
+        <label>Configuración de control de distancia</label>
+            <div class="col-md-12 row">
+                    <div class="col-md-6" >
+                            Unidad de distancia
+                    </div>
+                    <div class="col-md-6">
+                            <select name="repeatDistance" id="repeatDistance" ng-model="config.selectedDistance" ng-change="config.distanceDChanged()">
+                                    <option ng-repeat="option in config.distanceTypes" value="{{option.id}}">{{option.nombre}}</option>
+                            </select>
+                    </div>
+            </div>
+            <div class="col-md-12 row">
+                    <div class="col-md-6">
+                            Máximo valor de distancia
+                    </div>
+                    <div class="col-md-6">
+                            <input ng-model="config.distanceslider.options.ceil">
+                    </div>
+            </div>
+            <div class="col-md-12 row" style="margin-bottom:1%;">
+                    <div class="col-md-6" >
+                            Mínimo valor de distancia
+                    </div>
+                    <div class="col-md-6">
+                            <input ng-model="config.distanceslider.options.floor">
+                    </div>
+            </div>
 
-        ok: {{ok}}
+        </div>
+
+        <div class="col-md-12">
+        <label>Configuración de control de tiempo</label>
+            <div class="col-md-12 row">
+                    <div class="col-md-6" >
+                            Unidad de tiempo
+                    </div>
+                    <div class="col-md-6">
+                            <select name="repeatSelect" id="repeatSelect"
+                                    ng-model="config.selectedTime" ng-change="config.timeDChanged()">
+                                    <option ng-repeat="option in config.timeTypes "
+                                            value="{{option.nombre}}">{{option.nombre}}</option>
+                            </select>
+                    </div>
+            </div>
+
+            <div class="col-md-12 row"  ng-if="config.selectedTime != 0">
+                    <div class="col-md-6">
+                            Máximo valor de tiempo
+                    </div>
+                    <div class="col-md-6">
+                            <input ng-model="config.timeslider.options.ceil">
+                    </div>
+            </div>
+            <div class="col-md-12 row"  ng-if="config.selectedTime != 0">
+                    <div class="col-md-6" >
+                            Mínimo valor de tiempo
+                    </div>
+                    <div class="col-md-6">
+                            <input ng-model="config.timeslider.options.floor">
+                    </div>
+            </div>
+
+            <div class="col-md-12 row"  ng-if="config.selectedTime == 0">
+                    <div class="col-md-6">
+                            Fecha inicial
+                    </div>
+                    <div class="col-md-6">
+                            <input type="date" ng-model="config.timeslider.minDate">
+                    </div>
+            </div>
+            <div class="col-md-12 row"  ng-if="config.selectedTime == 0">
+                    <div class="col-md-6" >
+                            Fecha final
+                    </div>
+                    <div class="col-md-6">
+                            <input type="date" ng-model="config.timeslider.maxDate">
+                    </div>
+            </div>
+
+        </div>
         <!--<pre ng-repeat="(key, val) in this">{{key}} = {{val|json}}</pre>-->
 
         <div class="row col-md-12" style="margin-top:5%;">
                 <div class="col-md-6">
                         <button  style="width:100%;"
-                                class="btn" ng-click="ok()" >Ok</button>
+                                class="btn btn-outline-success" ng-click="ok()" >Ok</button>
                 </div>
                 <div class="col-md-6">
                         <button  style="width:100%;"

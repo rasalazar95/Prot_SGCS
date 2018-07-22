@@ -17,14 +17,14 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from utilities.settings import FRONTEND_URL
-from Backend.controllers.seguridad.views import IndexView, AcercaDeNosotrosView
+from Backend.controllers.seguridad.views import IndexView, PreindexView, AdminView
 import settings
 
 urlpatterns = [
                        # Examples:
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^/?$', IndexView.as_view(), name='Inicio'),
-                       url(r'^acerca_de_nosotros/?$', AcercaDeNosotrosView.as_view(), name='acerca_de_nosotros'),
+                       url(r'^Test/?', PreindexView.as_view(), name='Inicio'),
                        url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),]
                        #url(r'^seguridad/', include('Backend.apps.seguridad.urls')),
                        #url(r'^ciudadano/', include('Backend.apps.ciudadano.urls')),

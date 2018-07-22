@@ -8,8 +8,45 @@ from models import *
 from tasks import send_email
 import json
 from utilities.settings import BASE_DIR
+from django.views.decorators.csrf import csrf_protect
+
 
 class IndexView(base.View):
+    def get(self, request, *args, **kwargs):
+        """
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: Redirecciona por aca o por register view.
+        """
+        csrf_protect(request)
+        user = "externo"
+        print user, "GET"
+        return render(request, 'index.html', {'user': user})
+
+    def post(self, request, *args, **kwargs):
+        csrf_protect(request)
+        if(request.POST.get("interno") != None):
+            user = "interno"
+        else:
+            user = "externo"
+        print user, "POST"
+        return render(request, 'index.html', {'user': user})
+
+
+
+class PreindexView(base.View):
+    def get(self, request, *args, **kwargs):
+        """
+        :param request:
+        :param args:
+        :param kwargs:
+        :return: Redirecciona por aca o por register view.
+        """
+        return render(request, 'preindex.html', {'dir': BASE_DIR})
+
+
+class AdminView(base.View):
 
     def get(self, request, *args, **kwargs):
         """
@@ -18,17 +55,7 @@ class IndexView(base.View):
         :param kwargs:
         :return: Redirecciona por aca o por register view.
         """
-        # if usuario.is_authenticated():
-        #     if cuenta.is_administrador():
-        #         return HttpResponseRedirect("/administrador/")
-        #     elif cuenta.have_perfil():
-        #         return render(request, 'perfiles/modulos.html', {'cuenta': cuenta})
-        #     else:
-        #         # print("el usuario")
-        #         return render(request, 'perfiles/modulos.html', {})
-        # else:
-        return render(request, 'index.html', {'dir': BASE_DIR})
-
+        return render(request, 'admin.html', {'dir': BASE_DIR})
 
 class LoginView(base.View):
 
@@ -59,18 +86,3 @@ class LoginView(base.View):
         return HttpResponse('sucess')
         # return render(request, 'pagina/desktop/index.html', {}, context_instance=RequestContext(request))
 
-
-class TerminosCondicionesView(base.View):
-
-    def get(self, request, *args, **kwargs):
-        term_y_cond = TerminoCondicion.objects.filter(activo=True)
-        return render(request, 'terminos_y_condiciones/terminoCondicion.html',
-                      {
-                          "term_y_cond": term_y_cond
-                      })
-
-
-class AcercaDeNosotrosView(base.View):
-
-    def get(self, request, *args, **kwargs):
-        return render(request, 'pagina/desktop/acerca_de_nosotros.html', {})

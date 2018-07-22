@@ -13,25 +13,23 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
     var $ctrl = this;
     $scope.tab = 1;
     $scope.loading = false;
-    $scope.leftHiding = false;
-    $scope.rightHiding = false;
-
+    $scope.user = "";
     $scope.changeTab = function(value){
         $scope.tab = value;
     }
 
     $scope.hideLeftBar = function(){
-        $scope.leftHiding = true;
+        $scope.config.leftHiding = true;
     }
     $scope.showLeftBar = function(){
-        $scope.leftHiding = false;
+        $scope.config.leftHiding = false;
     }
 
     $scope.hideRightBar = function(){
-        $scope.rightHiding = true;
+        $scope.config.rightHiding = true;
     }
     $scope.showRightBar = function(){
-        $scope.rightHiding = false;
+        $scope.config.rightHiding = false;
     }
     $scope.changeActive = function(obj){
         obj.activo = !obj.activo;
@@ -54,7 +52,7 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
             //     ]
             // },
 
-    $scope.catalogue = [
+    $scope.search = [
         {
             nombre: "Resumen de la búsqueda",
             tipo: 'info',
@@ -67,60 +65,176 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
             }
         },
     ]
+    $scope.configs = [
 
-    $scope.areas = [];
+    ]
 
     $scope.config = {
-        catalogue : $scope.catalogue,
 
     }
+
+    $scope.config.leftHiding = false;
+    $scope.config.rightHiding = false;
+
+    $scope.config.formats = [
+        {
+            nombre: ".jpg",
+            activo: false,
+        },
+        {
+            nombre: ".xml",
+            activo: false,
+        },
+        {
+            nombre: ".kml",
+            activo: false,
+        },
+        {
+            nombre: ".pdf",
+            activo: false,
+        },
+        {
+            nombre: ".mseed",
+            activo: false,
+        },
+        {
+            nombre: ".kmz",
+            activo: false,
+        },
+        {
+            nombre: ".txt",
+            activo: false,
+        },
+    ]
 
     $scope.changeConfig = function(configObj, feature, value){
         configObj.feature = value;
-
     };
 
+    $scope.config.leftShowable = true;
+
     $scope.config.timeslider = {
-        min: 0,
+        minValue: 0,
         value : 20,
-        max: 100,
+        maxValue: 20,
+          options: {
+            floor: 0,
+            ceil: 100,
+             draggablerage: true,
+              getPointerColor: function(value){
+                return "#82A43C";
+              },
+              getSelectionBarColor: function(){
+                return "#82A43C";
+              },
+              noSwitching: true,
+          },
         height: '5px',
         width: '100%',
         denominacion: 'Años',
-    }
+        tipo_denominacion: 1,
+        multiplier: 360,
+    };
 
     $scope.config.distanceslider = {
-        min: 0,
         value : 10,
-        max: 30,
+          options: {
+            floor: 0,
+            ceil: 30,
+            vertical: true,
+              getPointerColor: function(value){
+                return "#82A43C";
+              },
+              getSelectionBarColor: function(){
+                return "#82A43C";
+              }
+          },
         height: '800px',
         width: '5px',
         denominacion: 'km',
+        tipo_denominacion: 0,
+        multiplier: 1000,
     }
 
-    $scope.timeTypes = [
+    $scope.config.timeDChanged = function(){
+        switch($scope.config.selectedTime){
+            case '0':
+                $scope.config.timeslider.denominacion = "Años";
+                break;
+            case '1':
+                $scope.config.timeslider.denominacion = "Años";
+                break;
+            case '2':
+                $scope.config.timeslider.denominacion = "Meses";
+                break;
+            case '3':
+                $scope.config.timeslider.denominacion = "Semanas";
+                break;
+            case '4':
+                $scope.config.timeslider.denominacion = "Días";
+                break;
+            case '5':
+                $scope.config.timeslider.denominacion = "Horas";
+                break;
+        }
+    }
+
+    $scope.config.distanceDChanged = function(){
+        switch($scope.config.selectedDistance){
+            case '0':
+                $scope.config.distanceslider.denominacion = "km";
+                $scope.config.distanceslider.multiplier = 1000;
+                break;
+            case '1':
+                $scope.config.distanceslider.denominacion = "m";
+                $scope.config.distanceslider.multiplier = 1;
+                break;
+        }
+    }
+
+    $scope.config.selectedTime = 1;
+    $scope.config.selectedDistance = 0
+
+    $scope.config.timeTypes = [
         {
-            nombre: 'Años'
+            id:0,
+            nombre:'Rango de tiempo',
+            activo: false,
         },
         {
-            nombre: 'Meses'
+            id:1,
+            nombre: 'Años',
+            activo: false,
         },
         {
-            nombre: 'Semanas'
+            id:2,
+            nombre: 'Meses',
+            activo: false,
         },
         {
-            nombre: 'Días'
+            id:3,
+            nombre: 'Semanas',
+            activo: false,
         },
         {
-            nombre: 'Horas'
+            id:4,
+            nombre: 'Días',
+            activo: false,
+        },
+        {
+            id:5,
+            nombre: 'Horas',
+            activo: false,
         }
     ];
 
-    $scope.distanceTypes = [
+    $scope.config.distanceTypes = [
         {
+            id: 0,
             nombre: 'Kilometros'
         },
         {
+            id: 1,
             nombre: 'Metros'
         },
     ];
@@ -165,6 +279,7 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
                 nombre:'Estaciones GNSS',
                 activo: true,
                 tipo : 7,
+                icono: "/Frontend/static/gpsstation.png",
             },
             {
                 nombre:'Movimientos en masa',
@@ -172,7 +287,7 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
                 tipo : 8,
             },
             {
-                nombre:'Mapa de amenaza sísmica',
+                nombre:'Enjambres',
                 activo: false,
                 tipo : 9,
             },
@@ -338,8 +453,8 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
           mapTypeControl:false,
         streetViewControl: false,
         panControl: true,
-        maxZoom: 11,
-        minZoom: 11,
+        maxZoom: 14,
+        minZoom: 9,
           draggable:true,
         fullscreenControl: true,
       },
@@ -357,6 +472,32 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
         fullscreenControl: false,
       },
     }
+
+    $scope.config.areas = [
+
+    ]
+
+    $scope.config.areas.push(fuentes);
+    ///
+    // configuración de prueba para usuarios externos
+    var externalConfig = angular.copy($scope.config);
+    externalConfig.areas[0].recursos[8].activo = true;
+    externalConfig.leftShowable = false;
+    externalConfig.leftHiding = true;
+
+    // configuración para usuario interno
+    var internalConfig = angular.copy($scope.config);
+    $scope.configs.push(externalConfig);
+    $scope.configs.push(internalConfig);
+
+    console.log($scope.user)
+    if($scope.user != undefined && $scope.user == "interno"){
+        $scope.config = $scope.configs[1];
+    }else{
+        $scope.config = $scope.configs[0];
+    }
+
+
 
   GoogleMapApi.then(function(maps) {
             maps.visualRefresh = true;
@@ -379,14 +520,6 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
     });
 
    /// push everything to the areas
-    $scope.areas.push(fuentes);
-   //  $scope.areas.push(RSNC);
-   //  $scope.areas.push(OVSM);
-   //  $scope.areas.push(OVSP);
-   //  $scope.areas.push(OVSPOP);
-   //  $scope.areas.push(GRED);
-   //  $scope.areas.push(RNAC);
-   //  $scope.areas.push(MMA);
 
     $scope.generalMap = new google.maps.Map(document.getElementById('map'), {
             zoom: $scope.map.zoom,
@@ -421,7 +554,6 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
     // Set initial restrict to the greater list of countries.
     autocomplete.setComponentRestrictions(
         {'country': ['co']});
-
 
         var markers = [];
         // Listen for the event fired when the user selects a prediction and retrieve
@@ -539,8 +671,8 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
     }
 
     $scope.distanceChanged = function(){
-        circleGeneral.setRadius($scope.config.distanceslider.value * 1000) ;
-        circleFar.setRadius($scope.config.distanceslider.value * 1000) ;
+        circleGeneral.setRadius($scope.config.distanceslider.value * $scope.config.distanceslider.multiplier) ;
+        circleFar.setRadius($scope.config.distanceslider.value * $scope.config.distanceslider.multiplier) ;
         $scope.redraw('distance');
     }
 
@@ -605,16 +737,16 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
             if(markers[i].timeEnd < 20 || markers[i].type == 1)
                 markers[i].timeEnd = 0;
 
-            if(markers[i].timeEnd <= $scope.config.timeslider.value &&  $scope.config.timeslider.value <= markers[i].timeStart){
-                if(markers[i].type == 1 && $scope.areas[0].recursos[0].activo == true)
+            if(markers[i].timeEnd <= $scope.config.timeslider.minValue &&  $scope.config.timeslider.minValue <= markers[i].timeStart){
+                if(markers[i].type == 1 && $scope.config.areas[0].recursos[0].activo == true)
                 {
                     markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position))
                 }else{
-                    if(markers[i].type == 2 && $scope.areas[0].recursos[1].activo == true)
+                    if(markers[i].type == 2 && $scope.config.areas[0].recursos[1].activo == true)
                     {
                         markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position))
                     }else{
-                        if(markers[i].type == 3 && $scope.areas[0].recursos[6].activo == true){
+                        if(markers[i].type == 3 && $scope.config.areas[0].recursos[6].activo == true){
                             markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position))
                         }else{
                         markers[i].marker.setVisible(false);
@@ -629,10 +761,17 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
     }
 
     $scope.getMarkerVisibility = function(position){
+        if($scope.config.distanceslider.multiplier == 1000){
         return arePointsNear(position,
             {lat: circleGeneral.getCenter().lat(), lng: circleGeneral.getCenter().lng()},
             $scope.config.distanceslider.value
             )
+        }else{
+        return arePointsNear(position,
+            {lat: circleGeneral.getCenter().lat(), lng: circleGeneral.getCenter().lng()},
+            $scope.config.distanceslider.value/1000
+            )
+        }
     }
 
     function setTime(){
@@ -656,8 +795,10 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
                   position: auxMarker.position,
                   visible : false,
                 });
+        auxMarker.marker.parent = auxMarker;
         auxMarker.marker.addListener('click', function() {
             $scope.selectedMarker = this;
+            console.log($scope.selectedMarker)
         });
 
         markers.push(auxMarker);
@@ -707,21 +848,43 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
         }
         );
         modalInstance.result.then(function (result) {
-                $scope.config = result;
-        });
+                $scope.config = angular.copy(result);
+                $scope.redraw("reconfigured");
+                circleGeneral.setRadius($scope.config.distanceslider.value * $scope.config.distanceslider.multiplier) ;
+                circleFar.setRadius($scope.config.distanceslider.value * $scope.config.distanceslider.multiplier) ;
+        })
     }
+
+    /// OJO con esto
+    $scope.$watchCollection('config.distanceslider', function(newConfig, oldConfig) {
+        if(!angular.equals(newConfig,oldConfig)){
+            $scope.distanceChanged()
+        }
+    });
+    $scope.$watchCollection('config.timeslider', function(newConfig, oldConfig) {
+        if(!angular.equals(newConfig,oldConfig)){
+            $scope.timeChanged()
+        }
+    });
+        $scope.$watchCollection('user', function(newConfig, oldConfig) {
+            console.log($scope.user,"user")
+    });
 
 }]);
 
 catalogueApp.controller('configController', ['$uibModalInstance','$scope', 'config', function($uibModalInstance,$scope, config) {
 
-    $scope.config = config;
+
+    $scope.config_aux = angular.copy(config);
+    $scope.config = config
+
 
      $scope.ok = function() {
-        $scope.$close($scope.config)
+         $scope.$close($scope.config);
     };
 
      $scope.cancel = function() {
+         $scope.config = $scope.config_aux;
          $scope.$dismiss("cancel");
     };
 }]);

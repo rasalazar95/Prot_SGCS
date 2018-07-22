@@ -1,0 +1,35 @@
+{% load staticfiles %}
+<div ng-controller="BodyController" class="container-fluid" style="padding-bottom: 5%;">
+
+        <div class="row col-md-12" style="margin-top:1%;text-align:center">
+                <div class="col-md-12 row">
+                        <div class="col-md-4">
+
+                        </div>
+                        <div class="col-md-4" >
+                                <form method="post" action="/">
+                                        {% csrf_token %}
+                                        <button name="externo" formmethod="post" class="btn" type="submit"
+                                                style="background-color:#C4D92F;width:100%;font-size:14px;">
+                                                Usar el sistema de catalogación como <strong>ciudadano</strong>
+                                        </button>
+                                </form>
+                        </div>
+                        <div class="col-md-4">
+
+                        </div>
+                </div>
+                <div class="row col-md-12" style="margin-top:1%;text-align:center">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                                <form method="post" action="/" >
+                                        {% csrf_token %}
+                                        <button name="interno" formmethod="post" class="btn" type="submit"  style="background-color:#C4D92F;width:100%;font-size:14px;">
+                                                Usar el sistema de catalogación como <strong>usuario interno</strong>
+                                        </button>
+                                </form>
+                        </div>
+                        <div class="col-md-4"></div>
+                </div>
+        </div>
+</div>
