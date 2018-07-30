@@ -1,0 +1,33 @@
+{% verbatim %}
+
+<div class="col-md-12 nomp"  style="font-size:13px;" ng-if="selectedMarker.activo == true" >
+   <div class="col-md-12">
+        <label>Nombre: {{selectedMarker.data.name}}</label>
+    </div>
+    <div class="col-md-12">
+        <label> Magnitud: {{selectedMarker.data.magnitud}}</label>
+    </div>
+    <div class="col-md-12">
+        <label> Profundidad: {{selectedMarker.data.profundidad}}</label>
+    </div>
+    <div class="col-md-12">
+        <label>Ubicación: </label>
+        <div class="col-md-12">
+            <label>Latitud: {{selectedMarker.data.pos.lat}}</label>
+        </div>
+        <div class="col-md-12">
+            <label>Longitud: {{selectedMarker.data.pos.lng}}</label>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <label>Fecha evento: {{selectedMarker.data.fecha}}</label>
+    </div>
+    <div class="col-md-12">
+        <label> Estaciones asociadas: {{selectedMarker.data.estaciones}}</label>
+    </div>
+    <div class="col-md-12">
+        <label> Intesidades asociadas: {{selectedMarker.data.intensidades_p}}</label>
+    </div>
+</div>
+
+{% endverbatim %}

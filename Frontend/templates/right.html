@@ -1,0 +1,129 @@
+{% verbatim %}
+<div  ng-if="config.rightHiding == false" ng-class="{'transition-hide-right':config.rightHiding == true}"  class="col-md-3 row nomp" >
+
+    <div class="col-md-12 row cattable" style="margin-left:0px;margin-top:1%;">
+        <div class="col-md-12 nomp" ng-repeat="item in search">
+
+            <div class="col-md-12 row nomp resourcebox unselectable " ng-click="changeActive(item)"
+                 ng-class="{'resourceboxfocus': item.activo}" style="max-height:5%;">
+
+                <div class="col-md-11" style="font-weight: bold;">
+                    <label>{{item.nombre}}</label>
+                </div>
+                <div class="col-md-1 nomp" style="text-align:center;">
+                    <i ng-if="item.activo == false" class="fa fa-plus" ></i>
+                    <i ng-if="item.activo == true" class="fa fa-minus" ></i>
+                </div>
+            </div>
+            <div class="col-md-12 nomp row  resourceboxopened" ng-show="item.activo == true"
+                 style="height:200px;max-height:200px;overflow-y: auto;margin-bottom:3%;    ">
+                <div ng-if="item.tipo == 'info'" style="font-size:14px;margin-left:5%;">
+                    <div ng-if="item.valores.length > 0" class="col-md-12 nomp" style=""
+                         ng-repeat="val in item.valores">
+                        <div class="col-md-12">
+                            <label >{{val.nombre}}</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12 row" ng-show="user == 'interno'">
+                        <label>Estaciones: {{item.valores.num_estaciones}}</label>
+                    </div>
+                    <div class="col-md-12 row" >
+                        <label>Sismos: {{item.valores.num_sismos}}</label>
+                    </div>
+                    <div class="col-md-12 row"  ng-show="user == 'interno'" >
+                        <label>Mecanismos focales: {{item.valores.num_mecanismos}}</label>
+                    </div>
+                    <div class="col-md-12 row" ng-show="user == 'interno'">
+                        <label>Intensidades percibidas: {{item.valores.num_intper}}88</label>
+                    </div>
+                    <div class="col-md-12 row"  >
+                        <label>Tamaño de la descarga: {{item.valores.tamano_descarga / (1024*1024*1024)  | number : 1}}GB</label>
+                    </div>
+                </div>
+                <div class="col-md-12 row">
+                    {{item.position}}
+                </div>
+            </div>
+            <div class="col-md-12 row unselectable nomp" ng-if="enableConsolidate == true && sismosConsolidar.lista.length > 1" >
+                <div class="col-md-12 row resourcebox nomp"
+                     ng-class="{'resourceboxfocus': sismosConsolidar.activo}"
+                     ng-click="changeActive(sismosConsolidar)">
+                    <div class="col-md-11" >
+                        <label>Sismos a consolidar</label>
+                    </div>
+                    <div class="col-md-1 nomp" style="text-align:center;">
+                        <i ng-if="sismosConsolidar.activo == false" class="fa fa-plus" ></i>
+                        <i ng-if="sismosConsolidar.activo == true" class="fa fa-minus" ></i>
+                    </div>
+                </div>
+                <div class="col-md-12 row nomp resourceboxopened"
+                     style="font-size:14px;"
+                     ng-if="sismosConsolidar.activo == true" >
+                    <div class="col-md-12 row" style="max-height:300px;overflow:auto;">
+                            <div ng-repeat="sismo in sismosConsolidar.lista">
+                                <div class="col-md-12" style="text-align:center;">
+                                    <a style="font-weight:bold;">Sismo {{$index + 1}}</a>
+                                </div>
+                                    {% endverbatim %}
+                                    {% include "unidades/sismoConsolidar.html" %}
+                                    {% verbatim %}
+                            </div>
+                    </div>
+                    <div class="col-md-12" style="text-align:center;margin-bottom:2%;">
+                        <button class="btn sgclightgreen" ng-click="consolidarSismos('')">Consolidar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 row unselectable nomp" ng-if="selectedMarker != null" >
+                <div class="col-md-12 row resourcebox nomp"
+                     ng-class="{'resourceboxfocus': selectedMarker.activo}"
+                     ng-click="changeActive(selectedMarker)">
+                    <div class="col-md-11" >
+                        <label>Recurso seleccionado</label>
+                    </div>
+                    <div class="col-md-1 nomp" style="text-align:center;">
+                        <i ng-if="selectedMarker.activo == false" class="fa fa-plus" ></i>
+                        <i ng-if="selectedMarker.activo == true" class="fa fa-minus" ></i>
+                    </div>
+                    {% endverbatim %}
+                </div>
+                <div class="col-md-12 row nomp resourceboxopened"
+                     style="font-size:14px;"
+                     ng-if="selectedMarker.activo == true" >
+                    <div ng-if="selectedMarker.type == 1">
+                            {% include "unidades/sismo.html" %}
+                    </div>
+                    <div ng-if="selectedMarker.type == 2">
+                            {% include "unidades/estacion.html" %}
+                    </div>
+                    <div ng-if="selectedMarker.type == 3">
+                            {% include "unidades/mecanismo_f.html" %}
+                    </div>
+                    <div ng-if="selectedMarker.type == 4">
+                            {% include "unidades/intensidad_m.html" %}
+                    </div>
+                    <div ng-if="selectedMarker.type == 5">
+                            {% include "unidades/intensidad_p.html" %}
+                    </div>
+                    <div ng-if="selectedMarker.type == 6">
+                            {% include "unidades/modelo_v.html" %}
+                    </div>
+                    <div ng-if="selectedMarker.type == 7">
+                            {% include "unidades/estacionGPS.html" %}
+                    </div>
+                    <div ng-if="selectedMarker.type == 8">
+                            {% include "unidades/mov_masa.html" %}
+                    </div>
+                    <div ng-if="selectedMarker.type == 9">
+                            {% include "unidades/enjambre.html" %}
+                    </div>
+                    <div ng-if="selectedMarker.type == 10">
+                            {% include "unidades/estacion.html" %}
+                    </div>
+                </div>
+                {% verbatim %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endverbatim %}

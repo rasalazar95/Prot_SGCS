@@ -1,0 +1,35 @@
+{% verbatim %}
+
+    <div class="col-md-12 nomp"  style="font-size:13px;margin-bottom:5%;" ng-if="selectedMarker.activo == true" >
+       <div class="col-md-12">
+            <label>Nombre: {{selectedMarker.data.name}}</label>
+        </div>
+        <div class="col-md-12">
+            <label>Archivo de configuración: {{selectedMarker.data.config}}</label>
+        </div>
+        <div class="col-md-12">
+            <label>En sitio desde: {{selectedMarker.data.fecha}}</label>
+        </div>
+        <div class="col-md-12">
+            <label>Ubicación: </label>
+            <div class="col-md-12">
+                <label>Latitud: {{selectedMarker.data.pos.lat}}</label>
+            </div>
+            <div class="col-md-12">
+                <label>Longitud: {{selectedMarker.data.pos.lng}}</label>
+            </div>
+        </div>
+        <div class="col-md-12" >
+            <label>Multimedia:</label>
+            <div class="col-md-12 nomp" style="margin-bottom:10px;">
+            <img width="150" src="/Frontend/static/estaciongps.jpg">
+
+            </div>
+            <div class="col-md-12 nomp">
+
+            <img width="150" src="/Frontend/static/estaciongps2.jpg">
+            </div>
+        </div>
+</div>
+
+{% endverbatim %}

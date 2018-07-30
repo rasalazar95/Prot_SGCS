@@ -1,0 +1,49 @@
+<div class="modal-body container-fluid col-md-12 row" style="padding-right:0;padding-bottom: 10%;padding-top:2%;z-index:20000;width:120%;" role="dialog">
+        <div class="col-md-12" style="margin-bottom:2%;">
+                <div class="col-md-12" style="font-weight: bold;text-align: center;font-size:20px;">
+                    <a style="border-bottom:1px solid lightgrey">Consolidación de sismos</a>
+                </div>
+        </div>
+    <form>
+    <div class="col-md-12 row" style="font-size:13px;">
+            <div class="col-md-12 row">
+                <div class="col-md-7 nomp">
+                    <div class="col-md-12 nomp" style="text-align:center;">
+                        <a>Información de los sismos</a>
+                    </div>
+                    <div class="col-md-12 row" style="max-height:300px;overflow:auto;">
+                            <div ng-repeat="sismo in sismosConsolidar.lista">
+                                <div class="col-md-12" style="text-align:center;">
+                                    <a style="font-weight:bold;">Sismo {{$index + 1}}</a>
+                                </div>
+                                <div ng-include="'Frontend/templates/unidades/sismoConsolidarModal.html'"></div>
+                            </div>
+                    </div>
+                </div>
+                <div class="col-md-5" style="max-height:300px;overflow:auto;">
+                    <div class="col-md-12 nomp" style="text-align:center;">
+                        <a>Selección de solución principal</a>
+                    </div>
+                    <div class="col-md-12" >
+                        <label ng-repeat="sismo in sismosConsolidar.lista">
+                        <input name="select" type="radio" ng-model="$parent.selectedEarthquake"
+                               ng-value="$index">
+                            Sismo {{ $index + 1}} ({{sismo.name}})
+                        </label>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <div class="row col-md-12" style="margin-top:5%;">
+                <div class="col-md-6">
+                        <button  style="width:100%;" ng-disabled="selectedEarthquake == null"
+                                class="btn btn-outline-success" ng-click="ok()" >Consolidar</button>
+                </div>
+                <div class="col-md-6">
+                        <button  style="width:100%;"
+                                class="btn btn-danger" ng-click="$dismiss()" >Cancel</button>
+                </div>
+    </div>
+    </form>
+</div>

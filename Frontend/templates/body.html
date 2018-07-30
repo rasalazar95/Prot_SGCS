@@ -1,5 +1,5 @@
 {% load staticfiles %}
-<div ng-controller="BodyController" class="container-fluid" style="padding-bottom: 5%;">
+<div ng-controller="BodyController" class="container-fluid nomp" style="padding-bottom: 5%;">
         <div ng-show="false" class="row col-md-12" style="font-size:15px;margin-left:6%;">
                 <div class="col-md-2">
                         <button class="tab unselectable" ng-click="changeTab(1)" ng-class="{ 'tab-active' : tab ==1 }">Visualizador de información</button>
@@ -11,9 +11,6 @@
         <div class="row col-md-12" style="margin-top:1%;">
                 <div class="col-md-12" ng-if="tab == 1">
                         {% include "b1.html" %}
-                </div>
-                <div ng-if="tab == 2">
-                        {% include "b2.html" %}
                 </div>
         </div>
 </div>

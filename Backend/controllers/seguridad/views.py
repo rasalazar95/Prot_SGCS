@@ -20,7 +20,7 @@ class IndexView(base.View):
         :return: Redirecciona por aca o por register view.
         """
         csrf_protect(request)
-        user = "externo"
+        user = "interno"
         print user, "GET"
         return render(request, 'index.html', {'user': user})
 

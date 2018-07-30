@@ -1,0 +1,32 @@
+{% verbatim %}
+<div ng-if="config.leftHiding == false" class="col-md-2 nomp resourcesbox" ng-class="{'transition-hide':config.leftHiding == true}"  style="z-index:1;">
+        <!--<div class="col-md-12" style="text-align:center;font-weight: bold;margin-bottom:-1%;">
+            Fuentes y unidades de información
+        </div>-->
+
+        <div class="col-md-12 row nomp" ng-repeat="area in config.areas">
+            <div class="col-md-12 nomp resourcebox row unselectable" ng-click="changeActive(area)"
+                 ng-class="{'resourceboxfocus': area.activo}">
+                <div class="col-md-11">
+                    <a style="">{{ area.nombre }} </a>
+                </div>
+                <div class="col-md-1 nomp" style="text-align:center">
+                        <i ng-if="area.activo == false" class="fa fa-plus" ></i>
+                        <i ng-if="area.activo == true" class="fa fa-minus" ></i>
+                </div>
+            </div>
+            <div class="col-md-12 row nomp resourceboxopened" ng-if="area.activo" style="max-height:600px;">
+                <div class="col-md-12 row"  ng-repeat="recurso in area.recursos">
+                    <div class="col-md-12">
+                        <label class="ctn"> {{recurso.nombre}}
+                        <img ng-src="{{recurso.icono}}" width="15px" style="margin-left:2%;">
+                          <input type="checkbox" ng-model="recurso.activo" ng-change="redraw()">
+                          <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endverbatim %}

@@ -1,0 +1,24 @@
+{% verbatim %}
+
+    <div class="col-md-12 nomp"  style="font-size:13px;margin-bottom:5%;" ng-if="selectedMarker.activo == true" >
+       <div class="col-md-12">
+            <label>Nombre: {{selectedMarker.data.name}}</label>
+        </div>
+        <div class="col-md-12">
+            <label>Fecha registro: {{selectedMarker.data.fecha}}</label>
+        </div>
+        <div class="col-md-12">
+            <label>Ubicación: </label>
+            <div class="col-md-12">
+                <label>Latitud: {{selectedMarker.data.pos.lat}}</label>
+            </div>
+            <div class="col-md-12">
+                <label>Longitud: {{selectedMarker.data.pos.lng}}</label>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <label> Sismo asociado: {{selectedMarker.data.sismo_as}}</label>
+        </div>
+    </div>
+
+{% endverbatim %}
