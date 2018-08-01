@@ -784,9 +784,12 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
         }
         return aux;
     }
-
+    $scope.visibleItemsCount = 0;
+    var visibility = false;
     $scope.redraw = function(condition){
         var aux;
+        $scope.visibleItemsCount = 0;
+        visibility = false;
         for(i = 1; i < markers.length;i++){
             if(markers[i].timeEnd > markers[i].timeStart ){
                 aux = markers[i].timeEnd;
@@ -800,63 +803,99 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
                 switch(markers[i].type){
                     case 1:
                         if($scope.config.areas[0].recursos[0].activo == true){
-                            markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position));
+                            visibility = $scope.getMarkerVisibility(markers[i].position);
+                            markers[i].marker.setVisible(visibility);
+                            if(visibility){
+                                $scope.visibleItemsCount++;
+                            }
                         }else{
                             markers[i].marker.setVisible(false);
                         }
                         break;
                     case 2:
                         if($scope.config.areas[0].recursos[1].activo == true){
-                            markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position));
+                            visibility = $scope.getMarkerVisibility(markers[i].position);
+                            markers[i].marker.setVisible(visibility);
+                            if(visibility){
+                                $scope.visibleItemsCount++;
+                            }
                         }else{
                             markers[i].marker.setVisible(false);
                         }
                         break;
                     case 3:
                         if($scope.config.areas[0].recursos[2].activo == true){
-                            markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position));
+                            visibility = $scope.getMarkerVisibility(markers[i].position);
+                            markers[i].marker.setVisible(visibility);
+                            if(visibility){
+                                $scope.visibleItemsCount++;
+                            }
                         }else{
                             markers[i].marker.setVisible(false);
                         }
                         break;
                     case 4:
                         if($scope.config.areas[0].recursos[3].activo == true){
-                            markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position));
+                            visibility = $scope.getMarkerVisibility(markers[i].position);
+                            markers[i].marker.setVisible(visibility);
+                            if(visibility){
+                                $scope.visibleItemsCount++;
+                            }
                         }else{
                             markers[i].marker.setVisible(false);
                         }
                         break;
                     case 5:
                         if($scope.config.areas[0].recursos[4].activo == true){
-                            markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position));
+                            visibility = $scope.getMarkerVisibility(markers[i].position);
+                            markers[i].marker.setVisible(visibility);
+                            if(visibility){
+                                $scope.visibleItemsCount++;
+                            }
                         }else{
                             markers[i].marker.setVisible(false);
                         }
                         break;
                     case 6:
                         if($scope.config.areas[0].recursos[5].activo == true){
-                            markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position));
+                            visibility = $scope.getMarkerVisibility(markers[i].position);
+                            markers[i].marker.setVisible(visibility);
+                            if(visibility){
+                                $scope.visibleItemsCount++;
+                            }
                         }else{
                             markers[i].marker.setVisible(false);
                         }
                         break;
                     case 7:
                         if($scope.config.areas[0].recursos[6].activo == true){
-                            markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position));
+                            visibility = $scope.getMarkerVisibility(markers[i].position);
+                            markers[i].marker.setVisible(visibility);
+                            if(visibility){
+                                $scope.visibleItemsCount++;
+                            }
                         }else{
                             markers[i].marker.setVisible(false);
                         }
                         break;
                     case 8:
                         if($scope.config.areas[0].recursos[7].activo == true){
-                            markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position));
+                            visibility = $scope.getMarkerVisibility(markers[i].position);
+                            markers[i].marker.setVisible(visibility);
+                            if(visibility){
+                                $scope.visibleItemsCount++;
+                            }
                         }else{
                             markers[i].marker.setVisible(false);
                         }
                         break;
                     case 9:
                         if($scope.config.areas[0].recursos[8].activo == true){
-                            markers[i].marker.setVisible($scope.getMarkerVisibility(markers[i].position));
+                            visibility = $scope.getMarkerVisibility(markers[i].position);
+                            markers[i].marker.setVisible(visibility);
+                            if(visibility){
+                                $scope.visibleItemsCount++;
+                            }
                         }else{
                             markers[i].marker.setVisible(false);
                         }
@@ -866,6 +905,7 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
                 markers[i].marker.setVisible(false);
             }
         }
+        //console.log($scope.visibleItemsCount)
     }
 
     $scope.getMarkerVisibility = function(position){
@@ -912,20 +952,28 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
                 });
         auxMarker.marker.parent = auxMarker;
         auxMarker.marker.addListener('click', function() {
+            //console.log(this.parent, lastSelectedMarker);
+
             $scope.selectedMarker = this.parent;
+
             if($scope.selectedMarker.children.length != 0){
                 for( i = 0; i < $scope.selectedMarker.children.length; i++){
-                    $scope.selectedMarker.children[i].marker.setVisible($scope.getMarkerVisibility($scope.selectedMarker.children[i].position))//
+                    visibility = $scope.getMarkerVisibility($scope.selectedMarker.children[i].position);
+                    $scope.selectedMarker.children[i].marker.setVisible(visibility)//
+                    if(visibility){
+                    $scope.visibleItemsCount++;
+                    }
                 }
             }
             /// revisar el cambio de seleccion de hijos a otro aparte
             if(lastSelectedMarker != null) {
                 if (lastSelectedMarker.children.length != 0){
-                    if (lastSelectedMarker.children.indexOf(this.parent) == -1) {
+                    if (lastSelectedMarker.children.indexOf(this.parent) == -1 && lastSelectedMarker != $scope.selectedMarker) {
                         for (i = 0 ; i < lastSelectedMarker.children.length; i++) {
                             lastSelectedMarker.children[i].marker.setVisible(false)//
                         }
                         lastSelectedMarker = this.parent
+                    }else{
                     }
                 }else{
                     lastSelectedMarker = this.parent
@@ -935,6 +983,8 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
             }else{
                 lastSelectedMarker = this.parent
             }
+
+            console.log($scope.visibleItemsCount)
             $scope.$apply();
         });
         auxMarker.marker.addListener('rightclick', function() {
@@ -961,6 +1011,7 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
      new google.maps.LatLng($scope.generalMap.center.lat() - vby, $scope.generalMap.center.lng() - vby),
      new google.maps.LatLng($scope.generalMap.center.lat() + vby, $scope.generalMap.center.lng() + vby)
     );
+
     var lastValidCenter = $scope.generalMap.getCenter();
 
     google.maps.event.addListener( $scope.generalMap, 'center_changed', function() {
@@ -1081,6 +1132,15 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
     });
     $scope.$watchCollection('config.selectedTime', function(newConfig, oldConfig) {
         $scope.config.timeslider.tipo_denominacion = $scope.config.selectedTime;
+    });
+
+
+    $scope.$watchCollection('visibleItemsCount', function(newConfig, oldConfig) {
+        console.log($scope.visibleItemsCount)
+    });
+
+    $scope.$watchCollection('selectedMarker', function(newConfig, oldConfig) {
+        console.log($scope.visibleItemsCount)
     });
 
 }]);

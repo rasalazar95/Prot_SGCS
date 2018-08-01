@@ -74,7 +74,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 row unselectable nomp" ng-if="selectedMarker != null" >
+            <div class="col-md-12 row unselectable nomp" ng-if="selectedMarker != null && visibleItemsCount > 0" >
                 <div class="col-md-12 row resourcebox nomp"
                      ng-class="{'resourceboxfocus': selectedMarker.activo}"
                      ng-click="changeActive(selectedMarker)">
