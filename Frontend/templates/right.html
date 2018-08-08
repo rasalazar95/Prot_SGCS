@@ -44,7 +44,7 @@
                     {{item.position}}
                 </div>
             </div>
-            <div class="col-md-12 row unselectable nomp" ng-if="enableConsolidate == true && sismosConsolidar.lista.length > 1" >
+            <div class="col-md-12 row unselectable nomp" ng-if="enableConsolidate == true && sismosConsolidar.lista.length > 1"><!--    -->
                 <div class="col-md-12 row resourcebox nomp"
                      ng-class="{'resourceboxfocus': sismosConsolidar.activo}"
                      ng-click="changeActive(sismosConsolidar)">
@@ -62,7 +62,10 @@
                     <div class="col-md-12 row" style="max-height:300px;overflow:auto;">
                             <div ng-repeat="sismo in sismosConsolidar.lista">
                                 <div class="col-md-12" style="text-align:center;">
-                                    <a style="font-weight:bold;">Sismo {{$index + 1}}</a>
+                                        <label class="ctn"> Sismo {{$index + 1}}
+                                          <input type="checkbox" ng-model="sismo.incluido" ng-change="">
+                                          <span class="checkmark"></span>
+                                        </label>
                                 </div>
                                     {% endverbatim %}
                                     {% include "unidades/sismoConsolidar.html" %}

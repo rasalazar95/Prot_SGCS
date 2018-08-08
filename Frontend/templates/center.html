@@ -3,16 +3,16 @@
      ng-class="{'col-md-7' : config.leftHiding == false && config.rightHiding == false,
      'col-md-9':config.leftHiding == true || config.rightHiding == true,
      'col-md-12':config.leftHiding == true && config.rightHiding == true}"
-        style="z-index: 1;">
+        style="z-index: 1;max-height:700px">
         <div class='' id="map_far" style="height:135px;width:70px;position:absolute;right:8.33%;z-index:10000;">
         </div>
     <input id="pac-input" class="form-control input-xxlarge" type="text" placeholder="Ingrese la búsqueda del lugar que desea">
     <div class='col-md-11' id="map" style="height: 600px;"></div>
-    <div class="col-md-1 row" >
+    <div class="col-md-1 row nomp" style="max-height: 600px" >
         <a style="font-size:14px;white-space: nowrap; margin-left:50%;">
              {{config.distanceslider.denominacion}}</a>
-            <div class="range-slider col-md-6">
-                <rzslider style="height:600px;margin-left:-40%"  rz-slider-model="config.distanceslider.value"
+            <div class="range-slider col-md-6 nomp" style="height:600px;">
+                <rzslider style="height:600px;margin-left:50%"  rz-slider-model="config.distanceslider.value"
                           rz-slider-options="config.distanceslider.options"></rzslider>
             </div>
         <div class="col-md-6 nomp row" ng-if="false">
@@ -33,27 +33,11 @@
                    rz-slider-model="config.timeslider.minValue"
                   rz-slider-high="config.timeslider.maxValue"
             rz-slider-options="config.timeslider.options"></rzslider>
-        <!--<div class="slidecontainer">
-            <input type="range" min="{{config.timeslider.min}}" max="{{config.timeslider.max}}"
-                   ng-model="config.timeslider.value" class="slider" ng-change="timeChanged()">
-        </div>-->
     </div>
-    <div class="col-md-12 row" style="margin-top:0%;font-size:12px;"  ng-show="config.timeslider.tipo_denominacion != 0" >
+    <div class="col-md-12 row nomp" style="margin-top:0%;font-size:12px;"  ng-show="config.timeslider.tipo_denominacion != 0" >
         <div class="col-md-6">
            {{config.timeslider.options.floor}} {{config.timeslider.denominacion}}
         </div>
-        <!--<div class="col-md-2" style="padding-left:4%;">
-           {{(config.timeslider.options.ceil / 5) * 1}} {{config.timeslider.denominacion}}
-        </div>
-        <div class="col-md-2"  style="padding-left:5%;">
-           {{(config.timeslider.options.ceil  / 5) * 2}} {{config.timeslider.denominacion}}
-        </div>
-        <div class="col-md-2"  style="padding-left:6%;">
-           {{(config.timeslider.options.ceil  / 5) * 3}} {{config.timeslider.denominacion}}
-        </div>
-        <div class="col-md-2"  style="padding-left:6%;">
-           {{(config.timeslider.options.ceil  / 5) * 4}} {{config.timeslider.denominacion}}
-        </div>-->
         <div class="col-md-6"  style="text-align:right;">
             <a style="right:0px">{{config.timeslider.options.ceil  }} {{config.timeslider.denominacion}}</a>
         </div>

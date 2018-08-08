@@ -1020,7 +1020,6 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
             lastValidCenter =  $scope.generalMap.getCenter();
             return;
         }
-
         // not valid anymore => return to last valid position
          $scope.generalMap.panTo(lastValidCenter);
     });
@@ -1028,11 +1027,12 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
     function setEarthquakes(){
         for(i = 0; i < markers.length; i++){
             if(markers[i].type == 1 && markers[i].marker.visible == true){
+                markers[i].incluido = true;
                 $scope.sismosConsolidar.lista.push(markers[i]);
             }
         }
     }
-
+    setEarthquakes();
     $scope.openConfig = function(size){
       var modalInstance = $uibModal.open({
         animation: false,
@@ -1102,6 +1102,15 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
     $scope.$watchCollection('config.distanceslider', function(newConfig, oldConfig) {
         if(!angular.equals(newConfig,oldConfig)){
             $scope.sismosConsolidar.lista = [];
+
+            if($scope.config.distanceslider.options.ceil - $scope.config.distanceslider.options.floor <= 10){
+                $scope.config.distanceslider.options.step = 0.5;
+                $scope.config.distanceslider.options.precision = 1;
+            }
+            if($scope.config.distanceslider.options.ceil - $scope.config.distanceslider.options.floor <= 5){
+                $scope.config.distanceslider.options.step = 0.2;
+                $scope.config.distanceslider.options.precision = 1;
+            }
             $scope.distanceChanged()
             $scope.enableConsolidate = $scope.config.timeslider.enableConsolidate &&
                 $scope.config.distanceslider.enableConsolidate;
@@ -1111,7 +1120,14 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
         }
     });
     $scope.$watchCollection('config.timeslider', function(newConfig, oldConfig) {
+
         if(!angular.equals(newConfig,oldConfig)){
+
+            // if(isNaN(newConfig.options.ceil) || isNaN(newConfig.minValue) ||
+            //     isNaN(newConfig.options.floor) || isNaN(newConfig.options.maxValue)){
+            //     $scope.config.timeslider = oldConfig;
+            //     //return;
+            // }
             $scope.sismosConsolidar.lista = [];
             $scope.timeChanged();
             $scope.enableConsolidate = $scope.config.timeslider.enableConsolidate &&
@@ -1122,11 +1138,19 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
         }
     });
     $scope.$watchCollection('user', function(newConfig, oldConfig) {
+
             if($scope.user != undefined && $scope.user == "interno"){
                 $scope.config = $scope.configs[1];
             }else{
                 $scope.config = $scope.configs[0];
             }
+            $scope.config.distanceslider.value = 1;
+            $scope.config.distanceslider.options.floor = 0;
+            $scope.config.distanceslider.options.ceil = 30;
+            $scope.config.timeslider.minValue = 1;
+            $scope.config.timeslider.maxValue = 30;
+            $scope.config.timeslider.options.floor = 0;
+            $scope.config.timeslider.options.ceil = 100;
             $scope.redraw("user charged");
             $scope.loading = false;
     });
@@ -1134,14 +1158,6 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
         $scope.config.timeslider.tipo_denominacion = $scope.config.selectedTime;
     });
 
-
-    $scope.$watchCollection('visibleItemsCount', function(newConfig, oldConfig) {
-        console.log($scope.visibleItemsCount)
-    });
-
-    $scope.$watchCollection('selectedMarker', function(newConfig, oldConfig) {
-        console.log($scope.visibleItemsCount)
-    });
 
 }]);
 
@@ -1177,6 +1193,8 @@ catalogueApp.controller('consolidarController', ['$uibModalInstance','$scope', '
          $scope.$dismiss("cancel");
     };
 }]);
+
+
 
 
 

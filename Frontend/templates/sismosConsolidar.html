@@ -12,7 +12,7 @@
                         <a>Información de los sismos</a>
                     </div>
                     <div class="col-md-12 row" style="max-height:300px;overflow:auto;">
-                            <div ng-repeat="sismo in sismosConsolidar.lista">
+                            <div ng-repeat="sismo in sismosConsolidar.lista" ng-if="sismo.incluido">
                                 <div class="col-md-12" style="text-align:center;">
                                     <a style="font-weight:bold;">Sismo {{$index + 1}}</a>
                                 </div>
@@ -25,7 +25,7 @@
                         <a>Selección de solución principal</a>
                     </div>
                     <div class="col-md-12" >
-                        <label ng-repeat="sismo in sismosConsolidar.lista">
+                        <label ng-repeat="sismo in sismosConsolidar.lista" ng-if="sismo.incluido">
                         <input name="select" type="radio" ng-model="$parent.selectedEarthquake"
                                ng-value="$index">
                             Sismo {{ $index + 1}} ({{sismo.name}})

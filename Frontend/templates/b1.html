@@ -1,6 +1,6 @@
 {% load staticfiles %}
 <div ng-controller="MapTabController" ng-show="loading == false" class="container-fluid" style="padding-bottom: 10%;padding-top:2%;">
-    <input ng-show="false" name="card[description]" value="{{user}}" ng-model="user" ng-initial>
+    <input ng-show="false" style="visibility: hidden;" name="card[description]" value="{{user}}" ng-model="user" ng-initial>
 {% verbatim %}
     <div class="nopm" style="position:fixed;z-index:5;left:0px;top:23%;">
         <button ng--click="hideLeftBar()" class="btn btn-sgcbgl unselectable" title="Esconder fuentes de información" ng-show="config.leftHiding == false && config.leftShowable == true">
