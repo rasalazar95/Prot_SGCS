@@ -26,8 +26,8 @@
                     </div>
                     <div class="col-md-12" >
                         <label ng-repeat="sismo in sismosConsolidar.lista" ng-if="sismo.incluido">
-                        <input name="select" type="radio" ng-model="$parent.selectedEarthquake"
-                               ng-value="$index">
+                        <input name="select" type="radio" ng-model="$parent.selectedEarthquake" ng-change="selectedRadio($index)"
+                               value="{{$index + 1}}">
                             Sismo {{ $index + 1}} ({{sismo.name}})
                         </label>
                     </div>

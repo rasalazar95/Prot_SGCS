@@ -509,18 +509,18 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
             };
 
             // Create a marker for each place.
-            markers.push({
-                position: place.geometry.location,
-                image : icon,
-                timeStart: 10000,
-                timeEnd: 0,
-                marker: new google.maps.Marker({
-              map: $scope.generalMap,
-              icon: icon,
-              title: place.name,
-              position: place.geometry.location
-            })
-            });
+            // markers.push({
+            //     position: place.geometry.location,
+            //     image : icon,
+            //     timeStart: 10000,
+            //     timeEnd: 0,
+            //     marker: new google.maps.Marker({
+            //   map: $scope.generalMap,
+            //   icon: icon,
+            //   title: place.name,
+            //   position: place.geometry.location
+            // })
+            // });
             lastValidCenter = place.geometry.location;
            allowedBounds = new google.maps.LatLngBounds(
                  new google.maps.LatLng( place.geometry.location.lat() - vby, place.geometry.location.lng() - vby),
@@ -542,17 +542,6 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
           $scope.generalMap.fitBounds(bounds);
         });
 
-    markers.push({
-        marker: new google.maps.Marker({
-            position: {
-                lat: 1.2218581000000000001, lng: -77.3679451000000000001
-            },
-            map: $scope.generalMap,
-            icon: "/Frontend/static/volcano.png"
-        }),
-        type:-1,
-        name: "center",
-    });
 
     var circleGeneral = new google.maps.Circle({
                 map: $scope.generalMap,
@@ -584,7 +573,6 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
             circleFar.setCenter({lat: event.latLng.lat(), lng: event.latLng.lng()})
             circleGeneral.setCenter({lat: event.latLng.lat(), lng: event.latLng.lng()})
             $scope.redraw('moved');
-        console.log('Right click was captured cirlce.', event.latLng.lat())
       });
 
     ///// listen to click events
@@ -604,7 +592,6 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
            circleFar.setCenter({lat: event.latLng.lat(), lng: event.latLng.lng()})
            circleGeneral.setCenter({lat: event.latLng.lat(), lng: event.latLng.lng()})
            $scope.redraw('moved');
-        console.log('Right click was captured map.', event)
       });
       $scope.generalMap.addListener('drag', function(event) {
         console.log('dragended.', event)
@@ -681,18 +668,70 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
         return "Error";
     };
 
-    function getMarkerType(flag){
-        if(!flag){
-        return Math.floor(chance.floating({min:1.1,max:9.9}));
+    function getMarkerType(type){
+        if(type < 1){
+            var t = Math.floor(chance.floating({min:1.1,max:9.9}));
+            if(t == 3 || t == 4 || t == 5 || t == 6){
+                getMarkerType(0)
+            }else{
+                return t;
+            }
         }else{
-            return 1;
+            return type;
         }
     }
 
-    function getMarkerImage(type){
+    function getMarkerImage(type, data){
         switch(type){
             case 1:
+                if(data != undefined){
+                    if(data.magnitud > 4){
+                        return "/Frontend/static/big_earthquake.png";
+                    }
+                    if(data.magnitud <= 4 && data.magnitud > 2.5){
+                        return "/Frontend/static/medium_earthquake.png";
+                    }
+                    if(data.magnitud <= 2.5){
+                        return "/Frontend/static/low_earthquake.png";
+                    }
+                }
                 return "/Frontend/static/earthquake.png";
+                break;
+            case 2:
+                return "/Frontend/static/station.png";
+                break;
+            case 3:
+                return "/Frontend/static/mecanismo_f.png";
+                break;
+            case 4:
+                return "/Frontend/static/intensidad_m.png";
+                break;
+            case 5:
+                return "/Frontend/static/intensidad_p.png";
+                break;
+            case 6:
+                return "/Frontend/static/modelo_v.png";
+                break;
+            case 7:
+                return "/Frontend/static/gpsstation.png";
+                break;
+            case 8:
+                return "/Frontend/static/mov_masa.png";
+                break;
+            case 9:
+                return "/Frontend/static/enjambre.png";
+                break;
+            case 10:
+                return "/Frontend/static/gpsstation.png";
+                break;
+        }
+        return null;
+    }
+
+    function getMarkerSelectedImage(type, flag){
+        switch(type){
+            case 1:
+                return "/Frontend/static/earthquake_selected.png";
                 break;
             case 2:
                 return "/Frontend/static/station.png";
@@ -784,6 +823,13 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
         }
         return aux;
     }
+
+    function setChildrenVisibility(children, visibility){
+        // for(var i = 0 ; i < children.length; i++){
+        //     //children[i].marker.setVisible(visibility);
+        // }
+    }
+
     $scope.visibleItemsCount = 0;
     var visibility = false;
     $scope.redraw = function(condition){
@@ -805,6 +851,9 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
                         if($scope.config.areas[0].recursos[0].activo == true){
                             visibility = $scope.getMarkerVisibility(markers[i].position);
                             markers[i].marker.setVisible(visibility);
+                            if(markers[i].children.length > 0){
+                                setChildrenVisibility(markers[i].children, visibility);
+                            }
                             if(visibility){
                                 $scope.visibleItemsCount++;
                             }
@@ -905,7 +954,6 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
                 markers[i].marker.setVisible(false);
             }
         }
-        //console.log($scope.visibleItemsCount)
     }
 
     $scope.getMarkerVisibility = function(position){
@@ -930,80 +978,88 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
         return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
     }
     var lastSelectedMarker = null;
-    var auxMarker = {};
-    var randomMarkers = function(number, x, y, dx, dy, flag){
+
+    var sismos = [];
+    var randomMarkers = function(number, x, y, dx, dy, type, parent){
+        var auxMarker = {};
+        var auxiliar = [];
         for(i = 0; i < number; i++) {
-        auxMarker.type = getMarkerType(flag);
-        auxMarker.name = getMarkerName(auxMarker.type);
-        auxMarker.image = getMarkerImage(auxMarker.type);
-        auxMarker.position = getRandomPos(x, y, dx, dy);
-        auxMarker.timeStart = setTime();
-        auxMarker.timeEnd = setTime();
-        auxMarker.data = getMarkerData(auxMarker.name, auxMarker.type, auxMarker.position);
-        auxMarker.activo = true;
-        auxMarker.children = [];
-        auxMarker.parentMarker = null;
-        auxMarker.marker = new google.maps.Marker({
-                  map: $scope.generalMap,
-                  icon: getMarkerImage(auxMarker.type),
-                  title: auxMarker.name,
-                  position: auxMarker.position,
-                  visible : false,
-                });
-        auxMarker.marker.parent = auxMarker;
-        auxMarker.marker.addListener('click', function() {
-            //console.log(this.parent, lastSelectedMarker);
-
-            $scope.selectedMarker = this.parent;
-
-            if($scope.selectedMarker.children.length != 0){
-                for( i = 0; i < $scope.selectedMarker.children.length; i++){
-                    visibility = $scope.getMarkerVisibility($scope.selectedMarker.children[i].position);
-                    $scope.selectedMarker.children[i].marker.setVisible(visibility)//
-                    if(visibility){
-                    $scope.visibleItemsCount++;
+            auxMarker.type = getMarkerType(type);
+            auxMarker.name = getMarkerName(auxMarker.type);
+            auxMarker.position = getRandomPos(x, y, dx, dy);
+            auxMarker.timeStart = setTime();
+            auxMarker.timeEnd = setTime();
+            auxMarker.data = getMarkerData(auxMarker.name, auxMarker.type, auxMarker.position);
+            auxMarker.image = getMarkerImage(auxMarker.type, auxMarker.data);
+            auxMarker.activo = true;
+            auxMarker.children = [];
+            auxMarker.parentMarker = parent;
+            auxMarker.marker = new google.maps.Marker({
+                      map: $scope.generalMap,
+                      icon: auxMarker.image,
+                      title: auxMarker.name,
+                      position: auxMarker.position,
+                      visible : false,
+                    });
+            if(parent != null){
+                auxMarker.marker.visible = auxMarker.parentMarker.marker.visible;
+            }
+            auxMarker.marker.parent = auxMarker;
+            auxMarker.marker.addListener('click', function() {
+                $scope.selectedMarker = this.parent;
+                $scope.selectedMarker.marker.setIcon(getMarkerSelectedImage($scope.selectedMarker.type));
+                if($scope.selectedMarker.children.length !== 0){
+                    for( i = 0; i < $scope.selectedMarker.children.length; i++){
+                        if($scope.config.areas[0].recursos[$scope.selectedMarker.children[i].type - 1].activo == true){
+                            visibility = $scope.getMarkerVisibility($scope.selectedMarker.position);
+                            $scope.selectedMarker.children[i].marker.setVisible(visibility)//
+                            if(visibility){
+                                $scope.visibleItemsCount++;
+                            }
+                        }
                     }
                 }
-            }
-            /// revisar el cambio de seleccion de hijos a otro aparte
-            if(lastSelectedMarker != null) {
-                if (lastSelectedMarker.children.length != 0){
-                    if (lastSelectedMarker.children.indexOf(this.parent) == -1 && lastSelectedMarker != $scope.selectedMarker) {
-                        for (i = 0 ; i < lastSelectedMarker.children.length; i++) {
-                            lastSelectedMarker.children[i].marker.setVisible(false)//
-                        }
-                        lastSelectedMarker = this.parent
-                    }else{
+                /// revisar el cambio de seleccion de hijos a otro aparte
+                if(lastSelectedMarker != null) {
+                    if(lastSelectedMarker != $scope.selectedMarker){
+                        lastSelectedMarker.marker.setIcon(getMarkerImage(lastSelectedMarker.type, lastSelectedMarker.data));
                     }
+                    if (lastSelectedMarker.children.length !== 0){
+                        if (lastSelectedMarker.children.indexOf(this.parent) == -1 && lastSelectedMarker != $scope.selectedMarker) {
+                            for (i = 0 ; i < lastSelectedMarker.children.length; i++) {
+                                lastSelectedMarker.children[i].marker.setVisible(false)//
+                            }
+                            lastSelectedMarker = this.parent
+                        }else{
+                        }
+                    }else{
+                        lastSelectedMarker = this.parent
+                    }
+                //}
+                //revisar
                 }else{
                     lastSelectedMarker = this.parent
                 }
-            //}
-            //revisar
-            }else{
-                lastSelectedMarker = this.parent
-            }
 
-            console.log($scope.visibleItemsCount)
-            $scope.$apply();
-        });
-        auxMarker.marker.addListener('rightclick', function() {
-           circleFar.setCenter({lat: event.latLng.lat(), lng: event.latLng.lng()})
-           circleGeneral.setCenter({lat: event.latLng.lat(), lng: event.latLng.lng()})
-           $scope.redraw('moved');
-        });
+                $scope.$apply();
+            });
+            auxMarker.marker.addListener('rightclick', function() {
+               circleFar.setCenter({lat: event.latLng.lat(), lng: event.latLng.lng()})
+               circleGeneral.setCenter({lat: event.latLng.lat(), lng: event.latLng.lng()})
+               $scope.redraw('moved');
+            });
 
-        markers.push(auxMarker);
-        auxMarker = {};
+            auxiliar.push(auxMarker);
+            auxMarker = {};
         }
-        $scope.redraw("start");
+        return auxiliar;
     }
 
 // IMPORTANTE PARA TEST
-    randomMarkers(1000, 1.25, -77.5019455, 0.25, 0.3659985, false);
-
+    markers = markers.concat(randomMarkers(1000, 1.25, -77.5019455, 0.25, 0.3659985, 0, null));
     // lat: 1.2218581, lng: -77.3679451
-    randomMarkers(3, 1.2218581, -77.3679451, 0.006, 0.006, true);
+    markers = markers.concat(randomMarkers(3, 1.2218581, -77.3679451, 0.006, 0.006, 1, null));
+    //$scope.redraw("start");
 
     var vby = 0.3;
     // bounds of the desired area
@@ -1122,7 +1178,6 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
     $scope.$watchCollection('config.timeslider', function(newConfig, oldConfig) {
 
         if(!angular.equals(newConfig,oldConfig)){
-
             // if(isNaN(newConfig.options.ceil) || isNaN(newConfig.minValue) ||
             //     isNaN(newConfig.options.floor) || isNaN(newConfig.options.maxValue)){
             //     $scope.config.timeslider = oldConfig;
@@ -1132,14 +1187,14 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
             $scope.timeChanged();
             $scope.enableConsolidate = $scope.config.timeslider.enableConsolidate &&
                 $scope.config.distanceslider.enableConsolidate;
-            if($scope.enableConsolidate == true){
+            if($scope.enableConsolidate === true){
                 setEarthquakes();
             }
         }
     });
     $scope.$watchCollection('user', function(newConfig, oldConfig) {
 
-            if($scope.user != undefined && $scope.user == "interno"){
+            if($scope.user !== undefined && $scope.user === "interno"){
                 $scope.config = $scope.configs[1];
             }else{
                 $scope.config = $scope.configs[0];
@@ -1151,13 +1206,32 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
             $scope.config.timeslider.maxValue = 30;
             $scope.config.timeslider.options.floor = 0;
             $scope.config.timeslider.options.ceil = 100;
-            $scope.redraw("user charged");
+            //$scope.redraw("user charged");
             $scope.loading = false;
     });
     $scope.$watchCollection('config.selectedTime', function(newConfig, oldConfig) {
         $scope.config.timeslider.tipo_denominacion = $scope.config.selectedTime;
     });
 
+
+    function setExtraInfo(){
+        var aux = [];
+        var aux2 = [];
+        var aux3 = [];
+        var aux4 = [];
+        for(var i = 0 ; i < markers.length ; i++){
+            if(markers[i].type == 1){
+                x = markers[i].position.lat;
+                y = markers[i].position.lng;
+                aux = randomMarkers(3, x, y, 0.25, 0.3659985, 4, markers[i])
+                aux2 = randomMarkers(3, x, y, 0.25, 0.3659985, 5, markers[i])
+                aux3 = randomMarkers(3, x, y, 0.25, 0.3659985, 3, markers[i])
+                aux4 = randomMarkers(3, x, y, 0.25, 0.3659985, 6, markers[i])
+                markers[i].children = aux.concat(aux2,aux3, aux4)
+            }
+        }
+    }
+    setExtraInfo();
 
 }]);
 
@@ -1181,8 +1255,10 @@ catalogueApp.controller('consolidarController', ['$uibModalInstance','$scope', '
     $scope.sismosConsolidar = sismosConsolidar;
     $scope.selectedEarthquake = null;
 
-    $scope.selectedRadio = function(){
-        console.log($scope.selectedEarthquake)
+    $scope.selectedRadio = function(index){
+        if($scope.selectedEarthquake != index){
+         $scope.selectedEarthquake = index ;
+        }
     }
 
      $scope.ok = function() {
