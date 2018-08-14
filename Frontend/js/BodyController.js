@@ -508,19 +508,6 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
               scaledSize: new google.maps.Size(25, 25)
             };
 
-            // Create a marker for each place.
-            // markers.push({
-            //     position: place.geometry.location,
-            //     image : icon,
-            //     timeStart: 10000,
-            //     timeEnd: 0,
-            //     marker: new google.maps.Marker({
-            //   map: $scope.generalMap,
-            //   icon: icon,
-            //   title: place.name,
-            //   position: place.geometry.location
-            // })
-            // });
             lastValidCenter = place.geometry.location;
            allowedBounds = new google.maps.LatLngBounds(
                  new google.maps.LatLng( place.geometry.location.lat() - vby, place.geometry.location.lng() - vby),
@@ -1132,12 +1119,16 @@ catalogueApp.controller('MapTabController', ['$scope', 'uiGmapLogger', 'uiGmapGo
             var index = 0;
             var otherMarkers = [];
             for( i = 0 ;i < $scope.sismosConsolidar.lista.length; i++){
-                if(i != result){
-               index = markers.indexOf($scope.sismosConsolidar.lista[i]);
-               markers[index].marker.setVisible(false);
-                otherMarkers.push(markers.splice(index, 1)[0]);
+                if($scope.sismosConsolidar.lista[i].incluido == false){
+                    $scope.sismosConsolidar.lista.splice(i, 1)
                 }else{
-                    indexParent = i;
+                    if(i != result){
+                   index = markers.indexOf($scope.sismosConsolidar.lista[i]);
+                   markers[index].marker.setVisible(false);
+                    otherMarkers.push(markers.splice(index, 1)[0]);
+                    }else{
+                        indexParent = i;
+                    }
                 }
             }
             indexParent = markers.indexOf($scope.sismosConsolidar.lista[indexParent]);
